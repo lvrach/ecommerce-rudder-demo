@@ -94,6 +94,7 @@ export default function CheckoutPage(): React.JSX.Element {
       shipping,
       tax,
       currency: 'USD',
+      payment_method: paymentData?.cardHolder ? 'credit_card' : 'unknown',
       coupon: coupon?.code,
       products: items.map((item) => ({
         ...toProductPayload(item),
