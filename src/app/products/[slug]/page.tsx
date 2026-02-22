@@ -6,6 +6,10 @@ import { ProductInfo } from '@/components/product-detail/ProductInfo';
 import { WishlistButton } from '@/components/product-detail/WishlistButton';
 import { products } from '@/data/products';
 
+export function generateStaticParams(): { slug: string }[] {
+  return products.map((p) => ({ slug: p.slug }));
+}
+
 interface ProductPageProps {
   params: Promise<{ slug: string }>;
 }

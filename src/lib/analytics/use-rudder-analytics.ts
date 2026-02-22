@@ -14,9 +14,12 @@ async function initializeAnalytics(): Promise<RudderAnalytics> {
     const { RudderAnalytics } = await import('@rudderstack/analytics-js');
     const analytics = new RudderAnalytics();
 
-    const writeKey = process.env['NEXT_PUBLIC_RUDDERSTACK_WRITE_KEY'] ?? '';
+    const writeKey =
+      process.env['NEXT_PUBLIC_RUDDERSTACK_WRITE_KEY'] ||
+      '3A2gZcVrnZOo48WpqNMzdDNWv2r';
     const dataPlaneUrl =
-      process.env['NEXT_PUBLIC_RUDDERSTACK_DATAPLANE_URL'] ?? '';
+      process.env['NEXT_PUBLIC_RUDDERSTACK_DATAPLANE_URL'] ||
+      'https://rudderstacmww.dataplane.rudderstack.com';
 
     if (writeKey && dataPlaneUrl) {
       analytics.load(writeKey, dataPlaneUrl, {
