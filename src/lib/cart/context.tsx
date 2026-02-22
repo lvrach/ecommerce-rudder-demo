@@ -147,7 +147,7 @@ export function CartProvider({
 
   const discount = useMemo(
     () =>
-      state.coupon
+      state.coupon && subtotal >= state.coupon.min_order_amount
         ? (subtotal * state.coupon.discount_percentage) / 100
         : 0,
     [subtotal, state.coupon],

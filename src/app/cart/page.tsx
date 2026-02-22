@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useCart } from '@/lib/cart';
 import {
@@ -21,12 +21,15 @@ export default function CartPage(): React.JSX.Element {
 
   const { items, subtotal } = useCart();
   const analytics = useRudderAnalytics();
+  const [stableCartId] = useState(generateId);
+  const cartViewedFired = useRef(false);
 
   useEffect(() => {
-    if (!analytics || items.length === 0) return;
+    if (!analytics || items.length === 0 || cartViewedFired.current) return;
+    cartViewedFired.current = true;
 
     trackCartViewed(analytics, {
-      cart_id: generateId(),
+      cart_id: stableCartId,
       products: items.map((item) => ({
         ...toProductPayload(item),
         quantity: item.quantity,
@@ -34,7 +37,7 @@ export default function CartPage(): React.JSX.Element {
       value: subtotal,
       currency: 'USD',
     });
-  }, [analytics, items, subtotal]);
+  }, [analytics, items, subtotal, stableCartId]);
 
   if (items.length === 0) {
     return (

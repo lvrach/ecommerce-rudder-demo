@@ -36,14 +36,15 @@ export default function CheckoutPage(): React.JSX.Element {
   const [stableOrderId] = useState(generateId);
   const [stableCheckoutId] = useState(generateId);
   const checkoutStartedFired = useRef(false);
+  const isPlacingOrder = useRef(false);
 
   const [currentStep, setCurrentStep] = useState(1);
   const [shippingData, setShippingData] = useState<ShippingData | null>(null);
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
 
-  // Redirect to cart if empty
+  // Redirect to cart if empty (but not during order placement)
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && !isPlacingOrder.current) {
       router.replace('/cart');
     }
   }, [items.length, router]);
@@ -78,6 +79,7 @@ export default function CheckoutPage(): React.JSX.Element {
   }
 
   function handlePlaceOrder(): void {
+    isPlacingOrder.current = true;
     const shipping = subtotal > SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
     const taxableAmount = subtotal - discount;
     const tax = taxableAmount * TAX_RATE;
