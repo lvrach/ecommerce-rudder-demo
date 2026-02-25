@@ -57,6 +57,7 @@ export interface OrderCompletedPayload {
   shipping: number;
   tax: number;
   currency: string;
+  payment_method: string;
   products: CartProductPayload[];
   coupon?: string;
 }

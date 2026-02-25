@@ -38,7 +38,7 @@ export function ProductInfo({
 
   usePageTracking('Product Detail', {
     product_id: product.product_id,
-    product_name: product.name,
+    name: product.name,
     category: product.category,
   });
 
