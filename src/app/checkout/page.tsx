@@ -7,6 +7,7 @@ import { useCart } from '@/lib/cart';
 import {
   toProductPayload,
   trackCheckoutStarted,
+  trackOrderCompleted,
   usePageTracking,
   useRudderAnalytics,
 } from '@/lib/analytics';
@@ -36,6 +37,7 @@ export default function CheckoutPage(): React.JSX.Element {
   const [stableOrderId] = useState(generateId);
   const [stableCheckoutId] = useState(generateId);
   const checkoutStartedFired = useRef(false);
+  const orderCompletedFired = useRef(false);
   const isPlacingOrder = useRef(false);
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -79,35 +81,42 @@ export default function CheckoutPage(): React.JSX.Element {
   }
 
   function handlePlaceOrder(): void {
+    // Guard against double-clicks firing a duplicate order event
+    if (orderCompletedFired.current) return;
+    orderCompletedFired.current = true;
     isPlacingOrder.current = true;
+
     const shipping = subtotal > SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
     const taxableAmount = subtotal - discount;
     const tax = taxableAmount * TAX_RATE;
     const total = taxableAmount + shipping + tax;
 
-    // Store order data in sessionStorage for confirmation page
-    const orderData = {
-      orderId: stableOrderId,
-      total,
-      subtotal,
-      discount,
-      shipping,
-      tax,
-      currency: 'USD',
-      coupon: coupon?.code,
-      products: items.map((item) => ({
-        ...toProductPayload(item),
-        quantity: item.quantity,
-      })),
-    };
+    const orderProducts = items.map((item) => ({
+      ...toProductPayload(item),
+      quantity: item.quantity,
+    }));
 
-    try {
-      sessionStorage.setItem(
-        'serene-leaf-last-order',
-        JSON.stringify(orderData),
+    // Fire Order Completed here — analytics is guaranteed to be initialised
+    // (events have fired across all 3 checkout steps) and the complete order
+    // object is available in memory. This avoids the previous fragile
+    // sessionStorage hand-off to the confirmation page, which could silently
+    // fail (private browsing, quota exceeded) and drop the event entirely.
+    if (analytics) {
+      trackOrderCompleted(analytics, {
+        order_id: stableOrderId,
+        total,
+        subtotal,
+        discount,
+        shipping,
+        tax,
+        currency: 'USD',
+        products: orderProducts,
+        coupon: coupon?.code,
+      });
+    } else {
+      console.warn(
+        '[Analytics] analytics not ready when placing order — Order Completed event dropped',
       );
-    } catch {
-      // sessionStorage may be unavailable
     }
 
     clearCart();
