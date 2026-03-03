@@ -4,6 +4,7 @@ import { type FormEvent, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
 import { identifyUser, useRudderAnalytics } from '@/lib/analytics';
+import { generateUserIdFromEmail } from '@/lib/utils/id';
 
 interface UserProfile {
   email: string;
@@ -15,10 +16,6 @@ interface UserProfile {
 const DEMO_EMAIL = 'tea.lover@example.com';
 const DEMO_FIRST_NAME = 'Alex';
 const DEMO_LAST_NAME = 'Chen';
-
-function generateUserId(email: string): string {
-  return btoa(email).replace(/[=+/]/g, '');
-}
 
 function UserIcon(): React.JSX.Element {
   return (
@@ -119,7 +116,7 @@ export function LoginForm(): React.JSX.Element {
   function handleSubmit(e: FormEvent<HTMLFormElement>): void {
     e.preventDefault();
 
-    const userId = generateUserId(email);
+    const userId = generateUserIdFromEmail(email);
 
     if (analytics) {
       identifyUser(analytics, userId, {

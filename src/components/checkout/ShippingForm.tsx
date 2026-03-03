@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
 import {
+  identifyUser,
   trackCheckoutStepCompleted,
   trackCheckoutStepViewed,
   useRudderAnalytics,
 } from '@/lib/analytics';
+import { generateUserIdFromEmail } from '@/lib/utils/id';
 
 export interface ShippingData {
   firstName: string;
@@ -91,6 +93,17 @@ export function ShippingForm({
     if (!validate()) return;
 
     if (analytics) {
+      // Identify the user with the email provided at checkout.
+      // This fires before checkout_step_completed so that all subsequent
+      // events in this session (payment, order_completed) are attributed
+      // to the identified user rather than their anonymous_id.
+      identifyUser(analytics, generateUserIdFromEmail(form.email), {
+        email: form.email,
+        name: `${form.firstName} ${form.lastName}`,
+        first_name: form.firstName,
+        last_name: form.lastName,
+      });
+
       trackCheckoutStepCompleted(analytics, {
         checkout_id: checkoutId,
         step: 1,
