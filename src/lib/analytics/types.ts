@@ -11,6 +11,10 @@ export interface ProductPayload {
   image_url: string;
 }
 
+export interface ProductHoveredPayload extends ProductPayload {
+  hover_duration_ms?: number;
+}
+
 export interface CartProductPayload extends ProductPayload {
   quantity: number;
 }

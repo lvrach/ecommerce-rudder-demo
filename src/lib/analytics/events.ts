@@ -14,6 +14,7 @@ import type {
   IdentifyTraits,
   OrderCompletedPayload,
   PaymentInfoPayload,
+  ProductHoveredPayload,
   ProductListPayload,
   ProductPayload,
   PromotionPayload,
@@ -122,6 +123,14 @@ export function trackProductAddedToWishlist(
     ECOMMERCE_EVENTS.PRODUCT_ADDED_TO_WISHLIST,
     toApiObject(payload),
   );
+}
+
+export function trackProductHovered(
+  analytics: RudderAnalytics,
+  payload: ProductHoveredPayload,
+): void {
+  console.log('[Analytics]', ECOMMERCE_EVENTS.PRODUCT_HOVERED, payload);
+  analytics.track(ECOMMERCE_EVENTS.PRODUCT_HOVERED, toApiObject(payload));
 }
 
 export function trackCartViewed(
