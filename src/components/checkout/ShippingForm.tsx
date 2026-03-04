@@ -95,6 +95,7 @@ export function ShippingForm({
         checkout_id: checkoutId,
         step: 1,
         step_name: 'Shipping',
+        shipping_country: form.country,
       });
     }
 

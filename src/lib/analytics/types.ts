@@ -40,6 +40,8 @@ export interface CheckoutStepPayload {
   checkout_id: string;
   step: number;
   step_name: string;
+  /** Shipping destination country — populated only on the Shipping step (step 1). */
+  shipping_country?: string;
 }
 
 export interface PaymentInfoPayload {
