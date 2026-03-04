@@ -14,6 +14,7 @@ import type {
   IdentifyTraits,
   OrderCompletedPayload,
   PaymentInfoPayload,
+  ProductListFilteredPayload,
   ProductListPayload,
   ProductPayload,
   PromotionPayload,
@@ -75,6 +76,17 @@ export function trackProductListViewed(
 ): void {
   console.log('[Analytics]', ECOMMERCE_EVENTS.PRODUCT_LIST_VIEWED, payload);
   analytics.track(ECOMMERCE_EVENTS.PRODUCT_LIST_VIEWED, toApiObject(payload));
+}
+
+export function trackProductListFiltered(
+  analytics: RudderAnalytics,
+  payload: ProductListFilteredPayload,
+): void {
+  console.log('[Analytics]', ECOMMERCE_EVENTS.PRODUCT_LIST_FILTERED, payload);
+  analytics.track(
+    ECOMMERCE_EVENTS.PRODUCT_LIST_FILTERED,
+    toApiObject(payload),
+  );
 }
 
 export function trackProductClicked(
