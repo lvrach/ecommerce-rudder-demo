@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
 import {
+  identifyUser,
   trackCheckoutStepCompleted,
   trackCheckoutStepViewed,
   useRudderAnalytics,
@@ -46,6 +47,10 @@ const EMPTY_SHIPPING: ShippingData = {
   zipCode: '',
   country: '',
 };
+
+function generateUserId(email: string): string {
+  return btoa(email).replace(/[=+/]/g, '');
+}
 
 export function ShippingForm({
   onComplete,
@@ -91,6 +96,13 @@ export function ShippingForm({
     if (!validate()) return;
 
     if (analytics) {
+      identifyUser(analytics, generateUserId(form.email), {
+        email: form.email,
+        name: `${form.firstName} ${form.lastName}`,
+        first_name: form.firstName,
+        last_name: form.lastName,
+      });
+
       trackCheckoutStepCompleted(analytics, {
         checkout_id: checkoutId,
         step: 1,

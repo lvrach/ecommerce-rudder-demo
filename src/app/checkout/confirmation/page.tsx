@@ -74,17 +74,6 @@ function ConfirmationContent(): React.JSX.Element {
       } catch {
         // Ignore
       }
-    } else {
-      trackOrderCompleted(analytics, {
-        order_id: orderId,
-        total: displayTotal,
-        subtotal: displayTotal,
-        discount: 0,
-        shipping: 0,
-        tax: 0,
-        currency: 'USD',
-        products: [],
-      });
     }
   }, [analytics, orderId, displayTotal]);
 
