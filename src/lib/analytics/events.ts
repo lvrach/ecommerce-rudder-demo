@@ -6,6 +6,7 @@ import type {
 
 import { ECOMMERCE_EVENTS } from './constants';
 import type {
+  CartItemQuantityUpdatedPayload,
   CartProductPayload,
   CartViewedPayload,
   CheckoutStartedPayload,
@@ -130,6 +131,21 @@ export function trackCartViewed(
 ): void {
   console.log('[Analytics]', ECOMMERCE_EVENTS.CART_VIEWED, payload);
   analytics.track(ECOMMERCE_EVENTS.CART_VIEWED, toApiObject(payload));
+}
+
+export function trackCartItemQuantityUpdated(
+  analytics: RudderAnalytics,
+  payload: CartItemQuantityUpdatedPayload,
+): void {
+  console.log(
+    '[Analytics]',
+    ECOMMERCE_EVENTS.CART_ITEM_QUANTITY_UPDATED,
+    payload,
+  );
+  analytics.track(
+    ECOMMERCE_EVENTS.CART_ITEM_QUANTITY_UPDATED,
+    toApiObject(payload),
+  );
 }
 
 export function trackCouponApplied(

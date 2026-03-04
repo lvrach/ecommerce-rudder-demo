@@ -15,6 +15,10 @@ export interface CartProductPayload extends ProductPayload {
   quantity: number;
 }
 
+export interface CartItemQuantityUpdatedPayload extends CartProductPayload {
+  previous_quantity: number;
+}
+
 export interface ProductListPayload {
   list_id: string;
   category: string;
