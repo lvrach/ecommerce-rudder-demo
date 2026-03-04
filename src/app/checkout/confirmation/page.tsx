@@ -9,33 +9,11 @@ import {
   useRudderAnalytics,
 } from '@/lib/analytics';
 import type { CartProductPayload } from '@/lib/analytics';
+import { clearOrder, loadOrder } from '@/lib/order-storage';
 import { OrderSuccess } from '@/components/confirmation/OrderSuccess';
 
-interface StoredOrderData {
-  orderId: string;
-  total: number;
-  subtotal: number;
-  discount: number;
-  shipping: number;
-  tax: number;
-  currency: string;
-  coupon?: string;
-  products: CartProductPayload[];
-}
-
-function loadOrderFromStorage(orderId: string): StoredOrderData | null {
-  try {
-    const raw = sessionStorage.getItem('serene-leaf-last-order');
-    if (!raw) return null;
-
-    const data = JSON.parse(raw) as StoredOrderData;
-    if (data.orderId === orderId) return data;
-
-    return null;
-  } catch {
-    return null;
-  }
-}
+// Re-export the type so existing imports from this module keep working
+export type { CartProductPayload as StoredProduct };
 
 function ConfirmationContent(): React.JSX.Element {
   usePageTracking('Order Confirmation');
@@ -54,7 +32,10 @@ function ConfirmationContent(): React.JSX.Element {
     if (!analytics || orderTrackedRef.current) return;
     orderTrackedRef.current = true;
 
-    const storedOrder = loadOrderFromStorage(orderId);
+    // loadOrder checks sessionStorage first, then falls back to the cookie
+    // written by checkout/page.tsx. This means the event fires correctly even
+    // if the user refreshes after sessionStorage was cleared on the first load.
+    const storedOrder = loadOrder(orderId);
 
     if (storedOrder) {
       trackOrderCompleted(analytics, {
@@ -69,24 +50,20 @@ function ConfirmationContent(): React.JSX.Element {
         coupon: storedOrder.coupon,
       });
 
-      try {
-        sessionStorage.removeItem('serene-leaf-last-order');
-      } catch {
-        // Ignore
-      }
+      // Clear both storage locations now that the event has fired.
+      clearOrder();
     } else {
-      trackOrderCompleted(analytics, {
-        order_id: orderId,
-        total: displayTotal,
-        subtotal: displayTotal,
-        discount: 0,
-        shipping: 0,
-        tax: 0,
-        currency: 'USD',
-        products: [],
-      });
+      // Neither sessionStorage nor cookie had order data.
+      // This can happen if the user navigates directly to this URL or arrives
+      // from a different device/session. Skip the event — corrupted data
+      // (e.g. products:[]) would break revenue and product attribution.
+      console.warn(
+        '[Analytics] Order Completed skipped: no order data found for orderId',
+        orderId,
+        '— user may have navigated directly to the confirmation URL.',
+      );
     }
-  }, [analytics, orderId, displayTotal]);
+  }, [analytics, orderId]);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">

@@ -12,6 +12,7 @@ import {
 } from '@/lib/analytics';
 import { generateId } from '@/lib/utils/id';
 import { formatPrice } from '@/lib/utils/format';
+import { saveOrder } from '@/lib/order-storage';
 import { CheckoutStepper } from '@/components/checkout/CheckoutStepper';
 import { ShippingForm } from '@/components/checkout/ShippingForm';
 import type { ShippingData } from '@/components/checkout/ShippingForm';
@@ -85,7 +86,6 @@ export default function CheckoutPage(): React.JSX.Element {
     const tax = taxableAmount * TAX_RATE;
     const total = taxableAmount + shipping + tax;
 
-    // Store order data in sessionStorage for confirmation page
     const orderData = {
       orderId: stableOrderId,
       total,
@@ -101,14 +101,10 @@ export default function CheckoutPage(): React.JSX.Element {
       })),
     };
 
-    try {
-      sessionStorage.setItem(
-        'serene-leaf-last-order',
-        JSON.stringify(orderData),
-      );
-    } catch {
-      // sessionStorage may be unavailable
-    }
+    // Persist to sessionStorage + cookie so Order Completed always has full
+    // product data, even if the user refreshes the confirmation page after
+    // sessionStorage has been cleared on the first load.
+    saveOrder(orderData);
 
     clearCart();
     router.push(
