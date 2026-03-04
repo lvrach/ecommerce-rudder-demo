@@ -4,6 +4,7 @@ import type { CartItem } from '@/data/schema';
 import { useCart } from '@/lib/cart';
 import {
   toProductPayload,
+  trackCartItemQuantityUpdated,
   trackProductRemoved,
   useRudderAnalytics,
 } from '@/lib/analytics';
@@ -51,6 +52,13 @@ export function CartItemRow({ item }: CartItemRowProps): React.JSX.Element {
   }
 
   function handleQuantityChange(quantity: number): void {
+    if (analytics) {
+      trackCartItemQuantityUpdated(analytics, {
+        ...toProductPayload(item),
+        quantity,
+        previous_quantity: item.quantity,
+      });
+    }
     updateQuantity(item.product_id, quantity);
   }
 
