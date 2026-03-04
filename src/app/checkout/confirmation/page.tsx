@@ -74,18 +74,10 @@ function ConfirmationContent(): React.JSX.Element {
       } catch {
         // Ignore
       }
-    } else {
-      trackOrderCompleted(analytics, {
-        order_id: orderId,
-        total: displayTotal,
-        subtotal: displayTotal,
-        discount: 0,
-        shipping: 0,
-        tax: 0,
-        currency: 'USD',
-        products: [],
-      });
     }
+    // If sessionStorage is empty (page refresh / direct link), Order Completed
+    // was already fired on the initial page load. Don't re-fire with incomplete
+    // data (empty products, zeroed financials).
   }, [analytics, orderId, displayTotal]);
 
   return (

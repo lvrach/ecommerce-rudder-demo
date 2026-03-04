@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
 import {
+  identifyUser,
   trackCheckoutStepCompleted,
   trackCheckoutStepViewed,
   useRudderAnalytics,
@@ -52,7 +53,7 @@ export function ShippingForm({
   checkoutId,
 }: ShippingFormProps): React.JSX.Element {
   const [form, setForm] = useState<ShippingData>(EMPTY_SHIPPING);
-  const [errors, setErrors] = useState<Partial<Record<keyof ShippingData, string>>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof ShippingData, string>>>({})
   const analytics = useRudderAnalytics();
 
   useEffect(() => {
@@ -91,6 +92,17 @@ export function ShippingForm({
     if (!validate()) return;
 
     if (analytics) {
+      // Identify the user as soon as we have their email and name.
+      // This links all subsequent events (Payment Info Entered,
+      // Order Completed) to a known user identity, enabling
+      // customer-level analysis and attribution.
+      identifyUser(analytics, btoa(form.email).replace(/[=+/]/g, ''), {
+        email: form.email,
+        name: `${form.firstName} ${form.lastName}`,
+        first_name: form.firstName,
+        last_name: form.lastName,
+      });
+
       trackCheckoutStepCompleted(analytics, {
         checkout_id: checkoutId,
         step: 1,
