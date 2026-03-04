@@ -7,6 +7,7 @@ import { useCart } from '@/lib/cart';
 import {
   toProductPayload,
   trackCheckoutStarted,
+  trackCheckoutStepCompleted,
   usePageTracking,
   useRudderAnalytics,
 } from '@/lib/analytics';
@@ -80,6 +81,15 @@ export default function CheckoutPage(): React.JSX.Element {
 
   function handlePlaceOrder(): void {
     isPlacingOrder.current = true;
+
+    if (analytics) {
+      trackCheckoutStepCompleted(analytics, {
+        checkout_id: stableCheckoutId,
+        step: 3,
+        step_name: 'Review',
+      });
+    }
+
     const shipping = subtotal > SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
     const taxableAmount = subtotal - discount;
     const tax = taxableAmount * TAX_RATE;
