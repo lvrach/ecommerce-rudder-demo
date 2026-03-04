@@ -4,6 +4,7 @@ import type { CartItem } from '@/data/schema';
 import { useCart } from '@/lib/cart';
 import {
   toProductPayload,
+  trackProductAdded,
   trackProductRemoved,
   useRudderAnalytics,
 } from '@/lib/analytics';
@@ -51,7 +52,22 @@ export function CartItemRow({ item }: CartItemRowProps): React.JSX.Element {
   }
 
   function handleQuantityChange(quantity: number): void {
+    const previousQuantity = item.quantity;
     updateQuantity(item.product_id, quantity);
+
+    if (analytics) {
+      if (quantity > previousQuantity) {
+        trackProductAdded(analytics, {
+          ...toProductPayload(item),
+          quantity: quantity - previousQuantity,
+        });
+      } else if (quantity < previousQuantity) {
+        trackProductRemoved(analytics, {
+          ...toProductPayload(item),
+          quantity: previousQuantity - quantity,
+        });
+      }
+    }
   }
 
   const lineTotal = item.price * item.quantity;
