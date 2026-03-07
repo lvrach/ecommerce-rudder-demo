@@ -84,7 +84,7 @@ export function CouponInput(): React.JSX.Element {
         trackCouponDenied(analytics, {
           coupon_id: found.code,
           coupon_name: found.description,
-          discount: found.discount_percentage,
+          discount: 0,
           reason: `Minimum order amount not met (requires $${String(found.min_order_amount)})`,
         });
       }
@@ -98,7 +98,7 @@ export function CouponInput(): React.JSX.Element {
       trackCouponApplied(analytics, {
         coupon_id: found.code,
         coupon_name: found.description,
-        discount: found.discount_percentage,
+        discount: parseFloat(((subtotal * found.discount_percentage) / 100).toFixed(2)),
       });
     }
   }

@@ -9,6 +9,9 @@ export interface ProductPayload {
   currency: string;
   url: string;
   image_url: string;
+  rating: number;
+  review_count: number;
+  in_stock: boolean;
 }
 
 export interface CartProductPayload extends ProductPayload {
@@ -51,6 +54,7 @@ export interface PaymentInfoPayload {
 
 export interface OrderCompletedPayload {
   order_id: string;
+  revenue: number;
   total: number;
   subtotal: number;
   discount: number;
