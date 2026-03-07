@@ -59,6 +59,10 @@ export interface OrderCompletedPayload {
   currency: string;
   products: CartProductPayload[];
   coupon?: string;
+  /** Set to true when fired without sessionStorage data (e.g. cross-device,
+   *  page reload, or SSR redirect). Allows downstream filtering without
+   *  dropping the event entirely. */
+  incomplete?: boolean;
 }
 
 export interface CouponPayload {
