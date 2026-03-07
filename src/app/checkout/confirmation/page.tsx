@@ -75,6 +75,10 @@ function ConfirmationContent(): React.JSX.Element {
         // Ignore
       }
     } else {
+      // sessionStorage was missing (e.g. cross-device link, page reload, SSR
+      // redirect). Fire with incomplete: true so the event can be filtered in
+      // downstream tools rather than landing in the warehouse with zeroed-out
+      // revenue fields.
       trackOrderCompleted(analytics, {
         order_id: orderId,
         total: displayTotal,
@@ -84,6 +88,7 @@ function ConfirmationContent(): React.JSX.Element {
         tax: 0,
         currency: 'USD',
         products: [],
+        incomplete: true,
       });
     }
   }, [analytics, orderId, displayTotal]);
