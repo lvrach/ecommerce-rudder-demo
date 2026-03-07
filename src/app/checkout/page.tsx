@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/lib/cart';
 import {
+  identifyUser,
   toProductPayload,
   trackCheckoutStarted,
   usePageTracking,
@@ -69,6 +70,14 @@ export default function CheckoutPage(): React.JSX.Element {
   }, [analytics, items, subtotal, coupon, stableOrderId]);
 
   function handleShippingComplete(data: ShippingData): void {
+    if (analytics) {
+      identifyUser(analytics, data.email, {
+        email: data.email,
+        name: `${data.firstName} ${data.lastName}`,
+        first_name: data.firstName,
+        last_name: data.lastName,
+      });
+    }
     setShippingData(data);
     setCurrentStep(2);
   }
