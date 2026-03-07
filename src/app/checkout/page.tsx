@@ -84,10 +84,12 @@ export default function CheckoutPage(): React.JSX.Element {
     const taxableAmount = subtotal - discount;
     const tax = taxableAmount * TAX_RATE;
     const total = taxableAmount + shipping + tax;
+    const revenue = subtotal - discount;
 
     // Store order data in sessionStorage for confirmation page
     const orderData = {
       orderId: stableOrderId,
+      revenue,
       total,
       subtotal,
       discount,

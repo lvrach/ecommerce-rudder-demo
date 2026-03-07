@@ -35,6 +35,9 @@ export function toProductPayload(product: {
   currency: string;
   url: string;
   image_url: string;
+  rating: number;
+  review_count: number;
+  in_stock: boolean;
 }): ProductPayload {
   return {
     product_id: product.product_id,
@@ -47,6 +50,9 @@ export function toProductPayload(product: {
     currency: product.currency,
     url: product.url,
     image_url: product.image_url,
+    rating: product.rating,
+    review_count: product.review_count,
+    in_stock: product.in_stock,
   };
 }
 

@@ -13,6 +13,7 @@ import { OrderSuccess } from '@/components/confirmation/OrderSuccess';
 
 interface StoredOrderData {
   orderId: string;
+  revenue: number;
   total: number;
   subtotal: number;
   discount: number;
@@ -59,6 +60,7 @@ function ConfirmationContent(): React.JSX.Element {
     if (storedOrder) {
       trackOrderCompleted(analytics, {
         order_id: storedOrder.orderId,
+        revenue: storedOrder.revenue,
         total: storedOrder.total,
         subtotal: storedOrder.subtotal,
         discount: storedOrder.discount,
@@ -77,6 +79,7 @@ function ConfirmationContent(): React.JSX.Element {
     } else {
       trackOrderCompleted(analytics, {
         order_id: orderId,
+        revenue: displayTotal,
         total: displayTotal,
         subtotal: displayTotal,
         discount: 0,
