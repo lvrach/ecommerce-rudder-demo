@@ -5,6 +5,7 @@ export const ECOMMERCE_EVENTS = {
   // Ecommerce
   PRODUCTS_SEARCHED: 'Products Searched',
   PRODUCT_LIST_VIEWED: 'Product List Viewed',
+  PRODUCT_LIST_FILTERED: 'Product List Filtered',
   PRODUCT_CLICKED: 'Product Clicked',
   PRODUCT_VIEWED: 'Product Viewed',
   PRODUCT_ADDED: 'Product Added',
