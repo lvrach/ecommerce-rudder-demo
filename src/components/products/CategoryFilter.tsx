@@ -1,5 +1,12 @@
 'use client';
 
+import { useCallback } from 'react';
+
+import {
+  trackProductListFiltered,
+  useRudderAnalytics,
+} from '@/lib/analytics';
+
 const CATEGORIES = [
   'all',
   'green',
@@ -25,6 +32,23 @@ export function CategoryFilter({
   selected,
   onCategoryChange,
 }: CategoryFilterProps): React.JSX.Element {
+  const analytics = useRudderAnalytics();
+
+  const handleCategoryChange = useCallback(
+    (category: string): void => {
+      onCategoryChange(category);
+
+      if (analytics) {
+        trackProductListFiltered(analytics, {
+          list_id: 'product-catalog',
+          category,
+          filters: [{ type: 'category', value: category }],
+        });
+      }
+    },
+    [analytics, onCategoryChange],
+  );
+
   return (
     <div className="flex flex-wrap gap-2">
       {CATEGORIES.map((category: Category) => {
@@ -33,7 +57,7 @@ export function CategoryFilter({
           <button
             key={category}
             type="button"
-            onClick={() => onCategoryChange(category)}
+            onClick={() => handleCategoryChange(category)}
             className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
               isActive
                 ? 'bg-matcha text-white shadow-sm'

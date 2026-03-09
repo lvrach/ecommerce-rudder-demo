@@ -5,11 +5,13 @@ export const ECOMMERCE_EVENTS = {
   // Ecommerce
   PRODUCTS_SEARCHED: 'Products Searched',
   PRODUCT_LIST_VIEWED: 'Product List Viewed',
+  PRODUCT_LIST_FILTERED: 'Product List Filtered',
   PRODUCT_CLICKED: 'Product Clicked',
   PRODUCT_VIEWED: 'Product Viewed',
   PRODUCT_ADDED: 'Product Added',
   PRODUCT_REMOVED: 'Product Removed',
   PRODUCT_ADDED_TO_WISHLIST: 'Product Added to Wishlist',
+  PRODUCT_REMOVED_FROM_WISHLIST: 'Product Removed from Wishlist',
   CART_VIEWED: 'Cart Viewed',
   COUPON_APPLIED: 'Coupon Applied',
   COUPON_DENIED: 'Coupon Denied',

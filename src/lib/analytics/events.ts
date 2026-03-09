@@ -14,6 +14,7 @@ import type {
   IdentifyTraits,
   OrderCompletedPayload,
   PaymentInfoPayload,
+  ProductListFilteredPayload,
   ProductListPayload,
   ProductPayload,
   PromotionPayload,
@@ -77,6 +78,14 @@ export function trackProductListViewed(
   analytics.track(ECOMMERCE_EVENTS.PRODUCT_LIST_VIEWED, toApiObject(payload));
 }
 
+export function trackProductListFiltered(
+  analytics: RudderAnalytics,
+  payload: ProductListFilteredPayload,
+): void {
+  console.log('[Analytics]', ECOMMERCE_EVENTS.PRODUCT_LIST_FILTERED, payload);
+  analytics.track(ECOMMERCE_EVENTS.PRODUCT_LIST_FILTERED, toApiObject(payload));
+}
+
 export function trackProductClicked(
   analytics: RudderAnalytics,
   payload: ProductPayload,
@@ -120,6 +129,21 @@ export function trackProductAddedToWishlist(
   );
   analytics.track(
     ECOMMERCE_EVENTS.PRODUCT_ADDED_TO_WISHLIST,
+    toApiObject(payload),
+  );
+}
+
+export function trackProductRemovedFromWishlist(
+  analytics: RudderAnalytics,
+  payload: ProductPayload,
+): void {
+  console.log(
+    '[Analytics]',
+    ECOMMERCE_EVENTS.PRODUCT_REMOVED_FROM_WISHLIST,
+    payload,
+  );
+  analytics.track(
+    ECOMMERCE_EVENTS.PRODUCT_REMOVED_FROM_WISHLIST,
     toApiObject(payload),
   );
 }

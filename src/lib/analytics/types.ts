@@ -21,6 +21,12 @@ export interface ProductListPayload {
   products: ProductPayload[];
 }
 
+export interface ProductListFilteredPayload {
+  list_id: string;
+  category: string;
+  filters: Array<{ type: string; value: string }>;
+}
+
 export interface CartViewedPayload {
   cart_id: string;
   products: CartProductPayload[];
