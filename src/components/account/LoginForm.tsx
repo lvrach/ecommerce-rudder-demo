@@ -3,6 +3,7 @@
 import { type FormEvent, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
+import { selectRandomDemoPersona } from '@/data/demo-personas';
 import { identifyUser, useRudderAnalytics } from '@/lib/analytics';
 
 interface UserProfile {
@@ -11,10 +12,6 @@ interface UserProfile {
   lastName: string;
   userId: string;
 }
-
-const DEMO_EMAIL = 'tea.lover@example.com';
-const DEMO_FIRST_NAME = 'Alex';
-const DEMO_LAST_NAME = 'Chen';
 
 function generateUserId(email: string): string {
   return btoa(email).replace(/[=+/]/g, '');
@@ -111,9 +108,10 @@ export function LoginForm(): React.JSX.Element {
   const [showSuccess, setShowSuccess] = useState(false);
 
   function handleFillDemo(): void {
-    setEmail(DEMO_EMAIL);
-    setFirstName(DEMO_FIRST_NAME);
-    setLastName(DEMO_LAST_NAME);
+    const persona = selectRandomDemoPersona();
+    setEmail(persona.account.email);
+    setFirstName(persona.account.firstName);
+    setLastName(persona.account.lastName);
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>): void {

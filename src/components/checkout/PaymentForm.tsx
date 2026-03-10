@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
+import { getCurrentDemoPersona, selectRandomDemoPersona } from '@/data/demo-personas';
 import {
   trackCheckoutStepCompleted,
   trackCheckoutStepViewed,
@@ -22,13 +23,6 @@ interface PaymentFormProps {
   checkoutId: string;
   orderId: string;
 }
-
-const DEMO_PAYMENT: PaymentData = {
-  cardNumber: '4111 1111 1111 1111',
-  expiry: '12/28',
-  cvc: '123',
-  cardHolder: 'Sakura Tanaka',
-};
 
 const EMPTY_PAYMENT: PaymentData = {
   cardNumber: '',
@@ -149,7 +143,8 @@ export function PaymentForm({
   }
 
   function handleFillDemo(): void {
-    setForm(DEMO_PAYMENT);
+    const demoPersona = form.cardHolder ? selectRandomDemoPersona() : getCurrentDemoPersona();
+    setForm(demoPersona.payment);
     setErrors({});
   }
 

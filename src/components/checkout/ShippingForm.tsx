@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
+import { selectRandomDemoPersona } from '@/data/demo-personas';
 import {
   trackCheckoutStepCompleted,
   trackCheckoutStepViewed,
@@ -24,17 +25,6 @@ interface ShippingFormProps {
   onComplete: (data: ShippingData) => void;
   checkoutId: string;
 }
-
-const DEMO_SHIPPING: ShippingData = {
-  firstName: 'Sakura',
-  lastName: 'Tanaka',
-  email: 'sakura@sereneleaf.example',
-  address: '123 Teapot Lane',
-  city: 'Portland',
-  state: 'OR',
-  zipCode: '97201',
-  country: 'US',
-};
 
 const EMPTY_SHIPPING: ShippingData = {
   firstName: '',
@@ -102,7 +92,7 @@ export function ShippingForm({
   }
 
   function handleFillDemo(): void {
-    setForm(DEMO_SHIPPING);
+    setForm(selectRandomDemoPersona().shipping);
     setErrors({});
   }
 
