@@ -5,6 +5,19 @@ import { useEffect } from 'react';
 
 import { useRudderAnalytics } from './use-rudder-analytics';
 
+function getGeoProperties(): Record<string, string> {
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const locale = navigator.language;
+  // Derive best-effort country code from locale region subtag (e.g. "en-US" → "US")
+  const parts = locale.split('-');
+  const country = parts.length >= 2 ? parts[parts.length - 1] : undefined;
+  return {
+    timezone,
+    locale,
+    ...(country ? { country } : {}),
+  };
+}
+
 export function usePageTracking(
   pageName: string,
   properties?: Record<string, unknown>,
@@ -19,7 +32,10 @@ export function usePageTracking(
       ? (JSON.parse(propsKey) as ApiObject)
       : undefined;
 
-    console.log('[Analytics] Page:', pageName, parsed);
-    analytics.page(pageName, pageName, parsed);
+    const geo = getGeoProperties();
+    const enriched = { ...geo, ...(parsed ?? {}) } as ApiObject;
+
+    console.log('[Analytics] Page:', pageName, enriched);
+    analytics.page(pageName, pageName, enriched);
   }, [analytics, pageName, propsKey]);
 }
