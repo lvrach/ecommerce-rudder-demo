@@ -5,6 +5,11 @@ import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/shared/Button';
 import type { TeaProduct } from '@/data/schema';
+import {
+  toProductPayload,
+  trackProductAdded,
+  useRudderAnalytics,
+} from '@/lib/analytics';
 import { useAuth } from '@/lib/auth';
 import { useCart } from '@/lib/cart';
 
@@ -17,6 +22,7 @@ export function BuyNowButton({
   product,
   quantity,
 }: BuyNowButtonProps): React.JSX.Element {
+  const analytics = useRudderAnalytics();
   const { addItem } = useCart();
   const { isLoggedIn } = useAuth();
   const router = useRouter();
@@ -26,9 +32,24 @@ export function BuyNowButton({
       router.push('/account');
       return;
     }
+
     addItem(product, quantity);
+
+    if (analytics) {
+      trackProductAdded(analytics, {
+        ...toProductPayload(product),
+        quantity,
+      });
+    }
+
+    try {
+      sessionStorage.setItem('checkout-flow', 'instant');
+    } catch {
+      // sessionStorage may be unavailable
+    }
+
     router.push('/checkout');
-  }, [addItem, isLoggedIn, product, quantity, router]);
+  }, [analytics, addItem, isLoggedIn, product, quantity, router]);
 
   return (
     <Button

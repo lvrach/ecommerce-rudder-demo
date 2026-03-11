@@ -10,6 +10,7 @@ import {
   usePageTracking,
   useRudderAnalytics,
 } from '@/lib/analytics';
+import type { CheckoutFlow } from '@/lib/analytics';
 import { generateId } from '@/lib/utils/id';
 import { formatPrice } from '@/lib/utils/format';
 import { CheckoutStepper } from '@/components/checkout/CheckoutStepper';
@@ -25,6 +26,16 @@ const SHIPPING_THRESHOLD = 50;
 const SHIPPING_COST = 5.99;
 const TAX_RATE = 0.08;
 
+function readAndClearCheckoutFlow(): CheckoutFlow {
+  try {
+    const flow = sessionStorage.getItem('checkout-flow');
+    sessionStorage.removeItem('checkout-flow');
+    return flow === 'instant' ? 'instant' : 'standard';
+  } catch {
+    return 'standard';
+  }
+}
+
 export default function CheckoutPage(): React.JSX.Element {
   usePageTracking('Checkout');
 
@@ -35,6 +46,7 @@ export default function CheckoutPage(): React.JSX.Element {
   // Stable IDs for the checkout session — initialized once via useState lazy init
   const [stableOrderId] = useState(generateId);
   const [stableCheckoutId] = useState(generateId);
+  const [checkoutFlow] = useState<CheckoutFlow>(readAndClearCheckoutFlow);
   const checkoutStartedFired = useRef(false);
   const isPlacingOrder = useRef(false);
 
@@ -65,8 +77,9 @@ export default function CheckoutPage(): React.JSX.Element {
         quantity: item.quantity,
       })),
       coupon: coupon?.code,
+      checkout_flow: checkoutFlow,
     });
-  }, [analytics, items, subtotal, coupon, stableOrderId]);
+  }, [analytics, items, subtotal, coupon, stableOrderId, checkoutFlow]);
 
   function handleShippingComplete(data: ShippingData): void {
     setShippingData(data);
@@ -95,6 +108,7 @@ export default function CheckoutPage(): React.JSX.Element {
       tax,
       currency: 'USD',
       coupon: coupon?.code,
+      checkout_flow: checkoutFlow,
       products: items.map((item) => ({
         ...toProductPayload(item),
         quantity: item.quantity,

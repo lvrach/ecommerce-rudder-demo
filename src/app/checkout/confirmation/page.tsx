@@ -8,7 +8,7 @@ import {
   usePageTracking,
   useRudderAnalytics,
 } from '@/lib/analytics';
-import type { CartProductPayload } from '@/lib/analytics';
+import type { CartProductPayload, CheckoutFlow } from '@/lib/analytics';
 import { OrderSuccess } from '@/components/confirmation/OrderSuccess';
 
 interface StoredOrderData {
@@ -20,6 +20,7 @@ interface StoredOrderData {
   tax: number;
   currency: string;
   coupon?: string;
+  checkout_flow?: CheckoutFlow;
   products: CartProductPayload[];
 }
 
@@ -67,6 +68,7 @@ function ConfirmationContent(): React.JSX.Element {
         currency: storedOrder.currency,
         products: storedOrder.products,
         coupon: storedOrder.coupon,
+        checkout_flow: storedOrder.checkout_flow,
       });
 
       try {

@@ -1,3 +1,5 @@
+export type CheckoutFlow = 'instant' | 'standard';
+
 export interface ProductPayload {
   product_id: string;
   sku: string;
@@ -34,6 +36,7 @@ export interface CheckoutStartedPayload {
   currency: string;
   products: CartProductPayload[];
   coupon?: string;
+  checkout_flow: CheckoutFlow;
 }
 
 export interface CheckoutStepPayload {
@@ -59,6 +62,7 @@ export interface OrderCompletedPayload {
   currency: string;
   products: CartProductPayload[];
   coupon?: string;
+  checkout_flow?: CheckoutFlow;
 }
 
 export interface CouponPayload {
