@@ -20,4 +20,6 @@ export const ECOMMERCE_EVENTS = {
   ORDER_COMPLETED: 'Order Completed',
   PROMOTION_VIEWED: 'Promotion Viewed',
   PROMOTION_CLICKED: 'Promotion Clicked',
+  // Instant checkout
+  INSTANT_CHECKOUT_INITIATED: 'Instant Checkout Initiated',
 } as const;

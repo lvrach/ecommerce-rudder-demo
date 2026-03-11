@@ -217,6 +217,27 @@ export function trackPromotionClicked(
   analytics.track(ECOMMERCE_EVENTS.PROMOTION_CLICKED, toApiObject(payload));
 }
 
+/**
+ * Fired when a user clicks "Buy Now" and bypasses the cart to go
+ * directly to checkout. Use this event to distinguish the instant
+ * checkout path from a regular cart-based checkout in downstream
+ * analysis (e.g. conversion rate, drop-off, revenue attribution).
+ */
+export function trackInstantCheckoutInitiated(
+  analytics: RudderAnalytics,
+  payload: CartProductPayload,
+): void {
+  console.log(
+    '[Analytics]',
+    ECOMMERCE_EVENTS.INSTANT_CHECKOUT_INITIATED,
+    payload,
+  );
+  analytics.track(
+    ECOMMERCE_EVENTS.INSTANT_CHECKOUT_INITIATED,
+    toApiObject(payload),
+  );
+}
+
 export function identifyUser(
   analytics: RudderAnalytics,
   userId: string,
