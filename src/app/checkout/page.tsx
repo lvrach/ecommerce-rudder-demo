@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useCart } from '@/lib/cart';
 import {
@@ -25,10 +25,13 @@ const SHIPPING_THRESHOLD = 50;
 const SHIPPING_COST = 5.99;
 const TAX_RATE = 0.08;
 
-export default function CheckoutPage(): React.JSX.Element {
+function CheckoutContent(): React.JSX.Element {
   usePageTracking('Checkout');
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const checkoutFlow = searchParams.get('flow') === 'instant' ? 'instant' : 'standard';
+
   const { items, subtotal, discount, coupon, clearCart } = useCart();
   const analytics = useRudderAnalytics();
 
@@ -65,8 +68,9 @@ export default function CheckoutPage(): React.JSX.Element {
         quantity: item.quantity,
       })),
       coupon: coupon?.code,
+      checkout_flow: checkoutFlow,
     });
-  }, [analytics, items, subtotal, coupon, stableOrderId]);
+  }, [analytics, items, subtotal, coupon, stableOrderId, checkoutFlow]);
 
   function handleShippingComplete(data: ShippingData): void {
     setShippingData(data);
@@ -95,6 +99,7 @@ export default function CheckoutPage(): React.JSX.Element {
       tax,
       currency: 'USD',
       coupon: coupon?.code,
+      checkoutFlow,
       products: items.map((item) => ({
         ...toProductPayload(item),
         quantity: item.quantity,
@@ -112,7 +117,7 @@ export default function CheckoutPage(): React.JSX.Element {
 
     clearCart();
     router.push(
-      `/checkout/confirmation?orderId=${encodeURIComponent(stableOrderId)}&total=${encodeURIComponent(formatPrice(total))}`,
+      `/checkout/confirmation?orderId=${encodeURIComponent(stableOrderId)}&total=${encodeURIComponent(formatPrice(total))}&flow=${encodeURIComponent(checkoutFlow)}`,
     );
   }
 
@@ -138,6 +143,7 @@ export default function CheckoutPage(): React.JSX.Element {
           <ShippingForm
             onComplete={handleShippingComplete}
             checkoutId={stableCheckoutId}
+            checkoutFlow={checkoutFlow}
           />
         )}
 
@@ -146,6 +152,7 @@ export default function CheckoutPage(): React.JSX.Element {
             onComplete={handlePaymentComplete}
             checkoutId={stableCheckoutId}
             orderId={stableOrderId}
+            checkoutFlow={checkoutFlow}
           />
         )}
 
@@ -155,9 +162,24 @@ export default function CheckoutPage(): React.JSX.Element {
             paymentData={paymentData}
             onPlaceOrder={handlePlaceOrder}
             checkoutId={stableCheckoutId}
+            checkoutFlow={checkoutFlow}
           />
         )}
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage(): React.JSX.Element {
+  return (
+    <Suspense
+      fallback={
+        <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+          <p className="text-charcoal/60">Loading checkout...</p>
+        </div>
+      }
+    >
+      <CheckoutContent />
+    </Suspense>
   );
 }

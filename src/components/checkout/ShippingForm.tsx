@@ -24,6 +24,7 @@ export interface ShippingData {
 interface ShippingFormProps {
   onComplete: (data: ShippingData) => void;
   checkoutId: string;
+  checkoutFlow: string;
 }
 
 const EMPTY_SHIPPING: ShippingData = {
@@ -40,6 +41,7 @@ const EMPTY_SHIPPING: ShippingData = {
 export function ShippingForm({
   onComplete,
   checkoutId,
+  checkoutFlow,
 }: ShippingFormProps): React.JSX.Element {
   const [form, setForm] = useState<ShippingData>(EMPTY_SHIPPING);
   const [errors, setErrors] = useState<Partial<Record<keyof ShippingData, string>>>({});
@@ -51,9 +53,10 @@ export function ShippingForm({
         checkout_id: checkoutId,
         step: 1,
         step_name: 'Shipping',
+        checkout_flow: checkoutFlow,
       });
     }
-  }, [analytics, checkoutId]);
+  }, [analytics, checkoutId, checkoutFlow]);
 
   function updateField(field: keyof ShippingData, value: string): void {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -85,6 +88,7 @@ export function ShippingForm({
         checkout_id: checkoutId,
         step: 1,
         step_name: 'Shipping',
+        checkout_flow: checkoutFlow,
       });
     }
 

@@ -15,6 +15,9 @@ export interface CartProductPayload extends ProductPayload {
   quantity: number;
 }
 
+/** Buy Now Clicked reuses the same shape as a cart product. */
+export type BuyNowClickedPayload = CartProductPayload;
+
 export interface ProductListPayload {
   list_id: string;
   category: string;
@@ -34,12 +37,16 @@ export interface CheckoutStartedPayload {
   currency: string;
   products: CartProductPayload[];
   coupon?: string;
+  /** 'instant' = Buy Now path; 'standard' = cart path */
+  checkout_flow: string;
 }
 
 export interface CheckoutStepPayload {
   checkout_id: string;
   step: number;
   step_name: string;
+  /** 'instant' = Buy Now path; 'standard' = cart path */
+  checkout_flow: string;
 }
 
 export interface PaymentInfoPayload {
@@ -47,6 +54,8 @@ export interface PaymentInfoPayload {
   order_id: string;
   step: number;
   payment_method: string;
+  /** 'instant' = Buy Now path; 'standard' = cart path */
+  checkout_flow: string;
 }
 
 export interface OrderCompletedPayload {
@@ -59,6 +68,8 @@ export interface OrderCompletedPayload {
   currency: string;
   products: CartProductPayload[];
   coupon?: string;
+  /** 'instant' = Buy Now path; 'standard' = cart path */
+  checkout_flow: string;
 }
 
 export interface CouponPayload {

@@ -19,6 +19,7 @@ interface OrderReviewProps {
   paymentData: PaymentData;
   onPlaceOrder: () => void;
   checkoutId: string;
+  checkoutFlow: string;
 }
 
 const SHIPPING_THRESHOLD = 50;
@@ -30,6 +31,7 @@ export function OrderReview({
   paymentData,
   onPlaceOrder,
   checkoutId,
+  checkoutFlow,
 }: OrderReviewProps): React.JSX.Element {
   const { items, subtotal, discount, coupon } = useCart();
   const analytics = useRudderAnalytics();
@@ -40,9 +42,10 @@ export function OrderReview({
         checkout_id: checkoutId,
         step: 3,
         step_name: 'Review',
+        checkout_flow: checkoutFlow,
       });
     }
-  }, [analytics, checkoutId]);
+  }, [analytics, checkoutId, checkoutFlow]);
 
   const shipping = subtotal > SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const taxableAmount = subtotal - discount;

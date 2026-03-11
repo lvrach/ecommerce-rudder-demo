@@ -22,6 +22,7 @@ interface PaymentFormProps {
   onComplete: (data: PaymentData) => void;
   checkoutId: string;
   orderId: string;
+  checkoutFlow: string;
 }
 
 const EMPTY_PAYMENT: PaymentData = {
@@ -71,6 +72,7 @@ export function PaymentForm({
   onComplete,
   checkoutId,
   orderId,
+  checkoutFlow,
 }: PaymentFormProps): React.JSX.Element {
   const [form, setForm] = useState<PaymentData>(EMPTY_PAYMENT);
   const [errors, setErrors] = useState<Partial<Record<keyof PaymentData, string>>>({});
@@ -82,9 +84,10 @@ export function PaymentForm({
         checkout_id: checkoutId,
         step: 2,
         step_name: 'Payment',
+        checkout_flow: checkoutFlow,
       });
     }
-  }, [analytics, checkoutId]);
+  }, [analytics, checkoutId, checkoutFlow]);
 
   function updateField(field: keyof PaymentData, value: string): void {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -130,12 +133,14 @@ export function PaymentForm({
         order_id: orderId,
         step: 2,
         payment_method: 'credit_card',
+        checkout_flow: checkoutFlow,
       });
 
       trackCheckoutStepCompleted(analytics, {
         checkout_id: checkoutId,
         step: 2,
         step_name: 'Payment',
+        checkout_flow: checkoutFlow,
       });
     }
 

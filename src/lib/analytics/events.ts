@@ -6,6 +6,7 @@ import type {
 
 import { ECOMMERCE_EVENTS } from './constants';
 import type {
+  BuyNowClickedPayload,
   CartProductPayload,
   CartViewedPayload,
   CheckoutStartedPayload,
@@ -146,6 +147,14 @@ export function trackCouponDenied(
 ): void {
   console.log('[Analytics]', ECOMMERCE_EVENTS.COUPON_DENIED, payload);
   analytics.track(ECOMMERCE_EVENTS.COUPON_DENIED, toApiObject(payload));
+}
+
+export function trackBuyNowClicked(
+  analytics: RudderAnalytics,
+  payload: BuyNowClickedPayload,
+): void {
+  console.log('[Analytics]', ECOMMERCE_EVENTS.BUY_NOW_CLICKED, payload);
+  analytics.track(ECOMMERCE_EVENTS.BUY_NOW_CLICKED, toApiObject(payload));
 }
 
 export function trackCheckoutStarted(

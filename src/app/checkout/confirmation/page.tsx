@@ -20,6 +20,7 @@ interface StoredOrderData {
   tax: number;
   currency: string;
   coupon?: string;
+  checkoutFlow?: string;
   products: CartProductPayload[];
 }
 
@@ -46,6 +47,7 @@ function ConfirmationContent(): React.JSX.Element {
 
   const orderId = searchParams.get('orderId') ?? 'unknown';
   const totalParam = searchParams.get('total') ?? '';
+  const flowParam = searchParams.get('flow') ?? 'standard';
 
   const parsedTotal = parseFloat(totalParam.replace(/[^0-9.]/g, ''));
   const displayTotal = Number.isNaN(parsedTotal) ? 0 : parsedTotal;
@@ -67,6 +69,7 @@ function ConfirmationContent(): React.JSX.Element {
         currency: storedOrder.currency,
         products: storedOrder.products,
         coupon: storedOrder.coupon,
+        checkout_flow: storedOrder.checkoutFlow ?? flowParam,
       });
 
       try {
@@ -84,9 +87,10 @@ function ConfirmationContent(): React.JSX.Element {
         tax: 0,
         currency: 'USD',
         products: [],
+        checkout_flow: flowParam,
       });
     }
-  }, [analytics, orderId, displayTotal]);
+  }, [analytics, orderId, displayTotal, flowParam]);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
