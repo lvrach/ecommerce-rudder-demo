@@ -5,17 +5,7 @@ import { type FormEvent, useState } from 'react';
 import { Button } from '@/components/shared/Button';
 import { selectRandomDemoPersona } from '@/data/demo-personas';
 import { identifyUser, useRudderAnalytics } from '@/lib/analytics';
-
-interface UserProfile {
-  email: string;
-  firstName: string;
-  lastName: string;
-  userId: string;
-}
-
-function generateUserId(email: string): string {
-  return btoa(email).replace(/[=+/]/g, '');
-}
+import { type UserProfile, generateUserId, useAuth } from '@/lib/auth/context';
 
 function UserIcon(): React.JSX.Element {
   return (
@@ -99,12 +89,12 @@ function ProfileView({
 
 export function LoginForm(): React.JSX.Element {
   const analytics = useRudderAnalytics();
+  const auth = useAuth();
 
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
-  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
   function handleFillDemo(): void {
@@ -128,12 +118,12 @@ export function LoginForm(): React.JSX.Element {
       });
     }
 
-    setProfile({ email, firstName, lastName, userId });
+    auth.login({ email, firstName, lastName, userId });
     setShowSuccess(true);
   }
 
   function handleSignOut(): void {
-    setProfile(null);
+    auth.logout();
     setShowSuccess(false);
     setEmail('');
     setFirstName('');
@@ -142,12 +132,12 @@ export function LoginForm(): React.JSX.Element {
 
   return (
     <div className="w-full max-w-md rounded-2xl border border-sage/60 bg-white px-8 py-10 shadow-lg shadow-charcoal/5">
-      {showSuccess && profile && (
-        <SuccessToast name={profile.firstName} />
+      {showSuccess && auth.user && (
+        <SuccessToast name={auth.user.firstName} />
       )}
 
-      {profile ? (
-        <ProfileView profile={profile} onSignOut={handleSignOut} />
+      {auth.user ? (
+        <ProfileView profile={auth.user} onSignOut={handleSignOut} />
       ) : (
         <>
           <div className="mb-8 text-center">
