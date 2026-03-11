@@ -3,7 +3,6 @@
 import { useCallback, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
-import { QuantitySelector } from '@/components/shared/QuantitySelector';
 import type { TeaProduct } from '@/data/schema';
 import {
   toProductPayload,
@@ -14,14 +13,15 @@ import { useCart } from '@/lib/cart';
 
 interface AddToCartButtonProps {
   product: TeaProduct;
+  quantity: number;
 }
 
 export function AddToCartButton({
   product,
+  quantity,
 }: AddToCartButtonProps): React.JSX.Element {
   const analytics = useRudderAnalytics();
   const { addItem } = useCart();
-  const [quantity, setQuantity] = useState(1);
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const handleAddToCart = useCallback((): void => {
@@ -41,17 +41,14 @@ export function AddToCartButton({
   }, [analytics, product, quantity, addItem]);
 
   return (
-    <div className="flex items-center gap-4">
-      <QuantitySelector quantity={quantity} onChange={setQuantity} />
-      <Button
-        variant="primary"
-        size="lg"
-        disabled={!product.in_stock}
-        onClick={handleAddToCart}
-        className="flex-1"
-      >
-        {showConfirmation ? 'Added!' : 'Add to Cart'}
-      </Button>
-    </div>
+    <Button
+      variant="primary"
+      size="lg"
+      disabled={!product.in_stock}
+      onClick={handleAddToCart}
+      className="flex-1"
+    >
+      {showConfirmation ? 'Added!' : 'Add to Cart'}
+    </Button>
   );
 }

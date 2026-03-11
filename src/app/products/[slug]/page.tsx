@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { AddToCartButton } from '@/components/product-detail/AddToCartButton';
+import { ProductActions } from '@/components/product-detail/ProductActions';
 import { BrewingGuide } from '@/components/product-detail/BrewingGuide';
 import { ProductInfo } from '@/components/product-detail/ProductInfo';
 import { WishlistButton } from '@/components/product-detail/WishlistButton';
@@ -30,7 +30,7 @@ export default async function ProductPage({
 
       <div className="mt-8 flex items-center gap-3 md:ml-auto md:max-w-md">
         <div className="flex-1">
-          <AddToCartButton product={product} />
+          <ProductActions product={product} />
         </div>
         <WishlistButton product={product} />
       </div>
