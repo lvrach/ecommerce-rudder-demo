@@ -17,6 +17,11 @@ export interface CartProductPayload extends ProductPayload {
   quantity: number;
 }
 
+/** Payload for the Product Added track event. */
+export interface ProductAddedPayload extends CartProductPayload {
+  checkout_flow?: CheckoutFlow;
+}
+
 export interface ProductListPayload {
   list_id: string;
   category: string;
