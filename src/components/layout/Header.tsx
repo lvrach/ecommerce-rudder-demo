@@ -102,7 +102,7 @@ export function Header(): React.JSX.Element {
         >
           <LeafIcon />
           <span className="text-xl font-semibold tracking-tight text-charcoal">
-            Serene Leaf
+            Tea Leafs
           </span>
         </Link>
 

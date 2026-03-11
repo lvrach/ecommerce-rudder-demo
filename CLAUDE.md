@@ -1,4 +1,4 @@
-# Serene Leaf — Ecommerce RudderStack Demo
+# Tea Leafs — Ecommerce RudderStack Demo
 
 ## Package Manager
 - **Always use `pnpm`** — never npm or yarn

@@ -165,7 +165,7 @@ export function LoginForm(): React.JSX.Element {
               Welcome Back
             </h2>
             <p className="mt-1 text-sm text-charcoal/60">
-              Sign in to your Serene Leaf account
+              Sign in to your Tea Leafs account
             </p>
           </div>
 

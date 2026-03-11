@@ -1,4 +1,4 @@
-# Serene Leaf — Ecommerce RudderStack Demo
+# Tea Leafs — Ecommerce RudderStack Demo
 
 A boutique tea shop ecommerce demo showcasing RudderStack's ecommerce event tracking. Built for sales presentations to demonstrate the complete purchase funnel with 19 distinct RudderStack events visible in the browser console.
 

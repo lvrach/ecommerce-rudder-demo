@@ -5,7 +5,7 @@ export const TeaProductSchema = z.object({
   sku: z.string(),
   slug: z.string(),
   name: z.string(),
-  brand: z.string().default('Serene Leaf'),
+  brand: z.string().default('Tea Leafs'),
   category: z.enum([
     'green',
     'black',

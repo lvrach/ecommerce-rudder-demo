@@ -13,9 +13,12 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: 'Serene Leaf — Premium Tea Collection',
+  title: 'Tea Leafs — Premium Tea Collection',
   description:
     'Discover handcrafted artisan teas from around the world. From delicate white teas to bold pu-erh, find your perfect cup.',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
