@@ -15,6 +15,15 @@ export function Footer(): React.JSX.Element {
           >
             RudderStack
           </a>
+          {' · '}
+          <a
+            href="https://github.com/lvrach/ecommerce-rudder-demo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline transition-colors hover:text-matcha"
+          >
+            GitHub
+          </a>
         </p>
       </div>
     </footer>
