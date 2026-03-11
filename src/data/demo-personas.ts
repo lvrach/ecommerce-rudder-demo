@@ -7,7 +7,7 @@ interface DemoAccountData {
   lastName: string;
 }
 
-export interface DemoPersona {
+interface DemoPersona {
   id: string;
   account: DemoAccountData;
   shipping: ShippingData;
