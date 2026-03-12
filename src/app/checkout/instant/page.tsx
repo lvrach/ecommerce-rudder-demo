@@ -10,39 +10,37 @@ import {
   usePageTracking,
   useRudderAnalytics,
 } from '@/lib/analytics';
+import { useAuth } from '@/lib/auth';
 import { generateId } from '@/lib/utils/id';
 import { formatPrice } from '@/lib/utils/format';
-import { CheckoutStepper } from '@/components/checkout/CheckoutStepper';
-import { ShippingForm } from '@/components/checkout/ShippingForm';
-import type { ShippingData } from '@/components/checkout/ShippingForm';
-import { PaymentForm } from '@/components/checkout/PaymentForm';
-import type { PaymentData } from '@/components/checkout/PaymentForm';
 import { OrderReview } from '@/components/checkout/OrderReview';
-
-const CHECKOUT_STEPS = ['Shipping', 'Payment', 'Review'];
+import { getDemoPersonaByEmail } from '@/data/demo-personas';
 
 const SHIPPING_THRESHOLD = 50;
 const SHIPPING_COST = 5.99;
 const TAX_RATE = 0.08;
 
-export default function CheckoutPage(): React.JSX.Element {
-  usePageTracking('Checkout');
+export default function InstantCheckoutPage(): React.JSX.Element {
+  usePageTracking('Instant Checkout');
 
   const router = useRouter();
+  const { user, isLoggedIn } = useAuth();
   const { items, subtotal, discount, coupon, clearCart } = useCart();
   const analytics = useRudderAnalytics();
 
-  // Stable IDs for the checkout session — initialized once via useState lazy init
   const [stableOrderId] = useState(generateId);
   const [stableCheckoutId] = useState(generateId);
   const checkoutStartedFired = useRef(false);
   const isPlacingOrder = useRef(false);
 
-  const [currentStep, setCurrentStep] = useState(1);
-  const [shippingData, setShippingData] = useState<ShippingData | null>(null);
-  const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
+  // Guard: redirect if not logged in
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.replace('/account');
+    }
+  }, [isLoggedIn, router]);
 
-  // Redirect to cart if empty (but not during order placement)
+  // Guard: redirect if cart empty (but not during order placement)
   useEffect(() => {
     if (items.length === 0 && !isPlacingOrder.current) {
       router.replace('/cart');
@@ -60,7 +58,7 @@ export default function CheckoutPage(): React.JSX.Element {
       order_id: stableOrderId,
       value: subtotal,
       currency: 'USD',
-      checkout_flow: 'standard',
+      checkout_flow: 'instant',
       products: items.map((item) => ({
         ...toProductPayload(item),
         quantity: item.quantity,
@@ -69,16 +67,6 @@ export default function CheckoutPage(): React.JSX.Element {
     });
   }, [analytics, items, subtotal, coupon, stableOrderId]);
 
-  function handleShippingComplete(data: ShippingData): void {
-    setShippingData(data);
-    setCurrentStep(2);
-  }
-
-  function handlePaymentComplete(data: PaymentData): void {
-    setPaymentData(data);
-    setCurrentStep(3);
-  }
-
   function handlePlaceOrder(): void {
     isPlacingOrder.current = true;
     const shipping = subtotal > SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
@@ -86,7 +74,6 @@ export default function CheckoutPage(): React.JSX.Element {
     const tax = taxableAmount * TAX_RATE;
     const total = taxableAmount + shipping + tax;
 
-    // Store order data in sessionStorage for confirmation page
     const orderData = {
       orderId: stableOrderId,
       total,
@@ -95,7 +82,7 @@ export default function CheckoutPage(): React.JSX.Element {
       shipping,
       tax,
       currency: 'USD',
-      checkout_flow: 'standard',
+      checkout_flow: 'instant',
       coupon: coupon?.code,
       products: items.map((item) => ({
         ...toProductPayload(item),
@@ -118,47 +105,31 @@ export default function CheckoutPage(): React.JSX.Element {
     );
   }
 
-  // Prevent rendering checkout content while redirecting
-  if (items.length === 0) {
+  // Show redirecting message while guards fire
+  if (!isLoggedIn || items.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <p className="text-charcoal/60">Redirecting to cart...</p>
+        <p className="text-charcoal/60">Redirecting...</p>
       </div>
     );
   }
 
+  const { shipping: shippingData, payment: paymentData } =
+    getDemoPersonaByEmail(user?.email ?? '');
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <h1 className="mb-6 text-center text-3xl font-bold text-charcoal">
-        Checkout
+        Instant Checkout
       </h1>
 
-      <CheckoutStepper currentStep={currentStep} steps={CHECKOUT_STEPS} />
-
       <div className="rounded-2xl bg-cream/50 p-6 shadow-sm sm:p-8">
-        {currentStep === 1 && (
-          <ShippingForm
-            onComplete={handleShippingComplete}
-            checkoutId={stableCheckoutId}
-          />
-        )}
-
-        {currentStep === 2 && (
-          <PaymentForm
-            onComplete={handlePaymentComplete}
-            checkoutId={stableCheckoutId}
-            orderId={stableOrderId}
-          />
-        )}
-
-        {currentStep === 3 && shippingData && paymentData && (
-          <OrderReview
-            shippingData={shippingData}
-            paymentData={paymentData}
-            onPlaceOrder={handlePlaceOrder}
-            checkoutId={stableCheckoutId}
-          />
-        )}
+        <OrderReview
+          shippingData={shippingData}
+          paymentData={paymentData}
+          onPlaceOrder={handlePlaceOrder}
+          checkoutId={stableCheckoutId}
+        />
       </div>
     </div>
   );

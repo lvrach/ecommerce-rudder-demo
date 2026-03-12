@@ -14,6 +14,7 @@ import type {
   IdentifyTraits,
   OrderCompletedPayload,
   PaymentInfoPayload,
+  ProductAddedPayload,
   ProductListPayload,
   ProductPayload,
   PromotionPayload,
@@ -95,7 +96,7 @@ export function trackProductViewed(
 
 export function trackProductAdded(
   analytics: RudderAnalytics,
-  payload: CartProductPayload,
+  payload: ProductAddedPayload,
 ): void {
   console.log('[Analytics]', ECOMMERCE_EVENTS.PRODUCT_ADDED, payload);
   analytics.track(ECOMMERCE_EVENTS.PRODUCT_ADDED, toApiObject(payload));
@@ -215,27 +216,6 @@ export function trackPromotionClicked(
 ): void {
   console.log('[Analytics]', ECOMMERCE_EVENTS.PROMOTION_CLICKED, payload);
   analytics.track(ECOMMERCE_EVENTS.PROMOTION_CLICKED, toApiObject(payload));
-}
-
-/**
- * Fired when a user clicks "Buy Now" and bypasses the cart to go
- * directly to checkout. Use this event to distinguish the instant
- * checkout path from a regular cart-based checkout in downstream
- * analysis (e.g. conversion rate, drop-off, revenue attribution).
- */
-export function trackInstantCheckoutInitiated(
-  analytics: RudderAnalytics,
-  payload: CartProductPayload,
-): void {
-  console.log(
-    '[Analytics]',
-    ECOMMERCE_EVENTS.INSTANT_CHECKOUT_INITIATED,
-    payload,
-  );
-  analytics.track(
-    ECOMMERCE_EVENTS.INSTANT_CHECKOUT_INITIATED,
-    toApiObject(payload),
-  );
 }
 
 export function identifyUser(

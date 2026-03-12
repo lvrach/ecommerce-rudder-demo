@@ -31,6 +31,7 @@ export function AddToCartButton({
       trackProductAdded(analytics, {
         ...toProductPayload(product),
         quantity,
+        checkout_flow: 'standard',
       });
     }
 

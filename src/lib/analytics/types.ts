@@ -15,6 +15,10 @@ export interface CartProductPayload extends ProductPayload {
   quantity: number;
 }
 
+export interface ProductAddedPayload extends CartProductPayload {
+  checkout_flow: string;
+}
+
 export interface ProductListPayload {
   list_id: string;
   category: string;
@@ -32,6 +36,7 @@ export interface CheckoutStartedPayload {
   order_id: string;
   value: number;
   currency: string;
+  checkout_flow: string;
   products: CartProductPayload[];
   coupon?: string;
 }
@@ -57,6 +62,7 @@ export interface OrderCompletedPayload {
   shipping: number;
   tax: number;
   currency: string;
+  checkout_flow: string;
   products: CartProductPayload[];
   coupon?: string;
 }

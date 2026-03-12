@@ -19,6 +19,7 @@ interface StoredOrderData {
   shipping: number;
   tax: number;
   currency: string;
+  checkout_flow?: string;
   coupon?: string;
   products: CartProductPayload[];
 }
@@ -65,6 +66,7 @@ function ConfirmationContent(): React.JSX.Element {
         shipping: storedOrder.shipping,
         tax: storedOrder.tax,
         currency: storedOrder.currency,
+        checkout_flow: storedOrder.checkout_flow ?? 'standard',
         products: storedOrder.products,
         coupon: storedOrder.coupon,
       });
@@ -83,6 +85,7 @@ function ConfirmationContent(): React.JSX.Element {
         shipping: 0,
         tax: 0,
         currency: 'USD',
+        checkout_flow: 'standard',
         products: [],
       });
     }
