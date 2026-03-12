@@ -63,6 +63,7 @@ export default function InstantCheckoutPage(): React.JSX.Element {
         quantity: item.quantity,
       })),
       coupon: coupon?.code,
+      checkout_flow: 'instant',
     });
   }, [analytics, items, subtotal, coupon, stableOrderId]);
 
@@ -82,6 +83,7 @@ export default function InstantCheckoutPage(): React.JSX.Element {
       tax,
       currency: 'USD',
       coupon: coupon?.code,
+      checkout_flow: 'instant',
       products: items.map((item) => ({
         ...toProductPayload(item),
         quantity: item.quantity,

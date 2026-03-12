@@ -7,6 +7,11 @@ import { Button } from '@/components/shared/Button';
 import type { TeaProduct } from '@/data/schema';
 import { useAuth } from '@/lib/auth';
 import { useCart } from '@/lib/cart';
+import {
+  toProductPayload,
+  trackProductAdded,
+  useRudderAnalytics,
+} from '@/lib/analytics';
 
 interface BuyNowButtonProps {
   product: TeaProduct;
@@ -20,11 +25,21 @@ export function BuyNowButton({
   const { addItem } = useCart();
   const { isLoggedIn } = useAuth();
   const router = useRouter();
+  const analytics = useRudderAnalytics();
 
   const handleBuyNow = useCallback((): void => {
     addItem(product, quantity);
+
+    if (analytics) {
+      trackProductAdded(analytics, {
+        ...toProductPayload(product),
+        quantity,
+        checkout_flow: 'instant',
+      });
+    }
+
     router.push('/checkout/instant');
-  }, [addItem, product, quantity, router]);
+  }, [addItem, product, quantity, router, analytics]);
 
   if (!isLoggedIn) return null;
 
