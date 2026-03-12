@@ -22,9 +22,9 @@ export function BuyNowButton({
   product,
   quantity,
 }: BuyNowButtonProps): React.JSX.Element | null {
+  const analytics = useRudderAnalytics();
   const { addItem } = useCart();
   const { isLoggedIn } = useAuth();
-  const analytics = useRudderAnalytics();
   const router = useRouter();
 
   const handleBuyNow = useCallback((): void => {
@@ -39,7 +39,7 @@ export function BuyNowButton({
     }
 
     router.push('/checkout/instant');
-  }, [addItem, analytics, product, quantity, router]);
+  }, [analytics, addItem, product, quantity, router]);
 
   if (!isLoggedIn) return null;
 
