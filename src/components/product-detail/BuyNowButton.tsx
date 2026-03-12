@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/shared/Button';
 import type { TeaProduct } from '@/data/schema';
-import { useAuth } from '@/lib/auth';
-import { useCart } from '@/lib/cart';
 import {
   toProductPayload,
   trackProductAdded,
   useRudderAnalytics,
 } from '@/lib/analytics';
+import { useAuth } from '@/lib/auth';
+import { useCart } from '@/lib/cart';
 
 interface BuyNowButtonProps {
   product: TeaProduct;
@@ -24,8 +24,8 @@ export function BuyNowButton({
 }: BuyNowButtonProps): React.JSX.Element | null {
   const { addItem } = useCart();
   const { isLoggedIn } = useAuth();
-  const router = useRouter();
   const analytics = useRudderAnalytics();
+  const router = useRouter();
 
   const handleBuyNow = useCallback((): void => {
     addItem(product, quantity);
@@ -34,7 +34,7 @@ export function BuyNowButton({
       trackProductAdded(analytics, {
         ...toProductPayload(product),
         quantity,
-        buy_now: true,
+        checkout_flow: 'instant',
       });
     }
 

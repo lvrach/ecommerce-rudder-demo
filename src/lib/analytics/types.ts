@@ -13,7 +13,7 @@ export interface ProductPayload {
 
 export interface CartProductPayload extends ProductPayload {
   quantity: number;
-  buy_now?: boolean;
+  checkout_flow?: string;
 }
 
 export interface ProductListPayload {
@@ -35,7 +35,7 @@ export interface CheckoutStartedPayload {
   currency: string;
   products: CartProductPayload[];
   coupon?: string;
-  checkout_flow: string;
+  checkout_flow?: string;
 }
 
 export interface CheckoutStepPayload {
@@ -61,7 +61,7 @@ export interface OrderCompletedPayload {
   currency: string;
   products: CartProductPayload[];
   coupon?: string;
-  checkout_flow: string;
+  checkout_flow?: string;
 }
 
 export interface CouponPayload {
