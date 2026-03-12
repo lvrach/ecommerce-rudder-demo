@@ -34,7 +34,7 @@ export function BuyNowButton({
       trackProductAdded(analytics, {
         ...toProductPayload(product),
         quantity,
-        checkout_flow: 'instant',
+        buy_now: true,
       });
     }
 

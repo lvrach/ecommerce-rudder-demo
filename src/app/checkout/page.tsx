@@ -60,12 +60,12 @@ export default function CheckoutPage(): React.JSX.Element {
       order_id: stableOrderId,
       value: subtotal,
       currency: 'USD',
-      checkout_flow: 'standard',
       products: items.map((item) => ({
         ...toProductPayload(item),
         quantity: item.quantity,
       })),
       coupon: coupon?.code,
+      checkout_flow: 'standard',
     });
   }, [analytics, items, subtotal, coupon, stableOrderId]);
 
@@ -95,8 +95,8 @@ export default function CheckoutPage(): React.JSX.Element {
       shipping,
       tax,
       currency: 'USD',
-      checkout_flow: 'standard',
       coupon: coupon?.code,
+      checkout_flow: 'standard',
       products: items.map((item) => ({
         ...toProductPayload(item),
         quantity: item.quantity,
