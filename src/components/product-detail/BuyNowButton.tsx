@@ -16,19 +16,17 @@ interface BuyNowButtonProps {
 export function BuyNowButton({
   product,
   quantity,
-}: BuyNowButtonProps): React.JSX.Element {
+}: BuyNowButtonProps): React.JSX.Element | null {
   const { addItem } = useCart();
   const { isLoggedIn } = useAuth();
   const router = useRouter();
 
   const handleBuyNow = useCallback((): void => {
-    if (!isLoggedIn) {
-      router.push('/account');
-      return;
-    }
     addItem(product, quantity);
-    router.push('/checkout');
-  }, [addItem, isLoggedIn, product, quantity, router]);
+    router.push('/checkout/instant');
+  }, [addItem, product, quantity, router]);
+
+  if (!isLoggedIn) return null;
 
   return (
     <Button

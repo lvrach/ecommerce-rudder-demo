@@ -203,6 +203,15 @@ export function selectRandomDemoPersona(): DemoPersona {
   return persona;
 }
 
+export function getDemoPersonaByEmail(
+  email: string,
+): { shipping: ShippingData; payment: PaymentData } {
+  const match = DEMO_PERSONAS.find((p) => p.account.email === email);
+  const persona = match ?? DEMO_PERSONAS[0];
+  if (!persona) throw new Error('Demo persona pool cannot be empty');
+  return { shipping: persona.shipping, payment: persona.payment };
+}
+
 export function getCurrentDemoPersona(): DemoPersona {
   const storedPersona = getPersonaById(getStoredPersonaId());
   if (storedPersona) return storedPersona;
