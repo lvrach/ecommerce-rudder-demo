@@ -19,6 +19,7 @@ const STORAGE_KEY = 'serene-leaf-cart';
 interface CartContextValue {
   items: CartItem[];
   coupon: Coupon | null;
+  isHydrated: boolean;
   itemCount: number;
   subtotal: number;
   discount: number;
@@ -33,7 +34,7 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-function loadCartFromStorage(): CartState {
+function loadCartFromStorage(): Omit<CartState, 'isHydrated'> {
   if (typeof window === 'undefined') {
     return initialCartState;
   }
@@ -76,20 +77,17 @@ export function CartProvider({
   // Load persisted cart on mount
   useEffect(() => {
     const persisted = loadCartFromStorage();
-    if (persisted.items.length > 0) {
-      for (const item of persisted.items) {
-        dispatch({ type: 'ADD_ITEM', payload: item });
-      }
-    }
-    if (persisted.coupon) {
-      dispatch({ type: 'APPLY_COUPON', payload: persisted.coupon });
-    }
+    dispatch({
+      type: 'HYDRATE',
+      payload: { items: persisted.items, coupon: persisted.coupon },
+    });
   }, []);
 
   // Persist cart to localStorage on state changes
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      const { items, coupon } = state;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ items, coupon }));
     } catch {
       // localStorage may be full or unavailable
     }
@@ -159,6 +157,7 @@ export function CartProvider({
     () => ({
       items: state.items,
       coupon: state.coupon,
+      isHydrated: state.isHydrated,
       itemCount,
       subtotal,
       discount,
@@ -173,6 +172,7 @@ export function CartProvider({
     [
       state.items,
       state.coupon,
+      state.isHydrated,
       itemCount,
       subtotal,
       discount,

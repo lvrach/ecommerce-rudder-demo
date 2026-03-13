@@ -3,10 +3,19 @@ import type { CartAction, CartState } from './types';
 export const initialCartState = {
   items: [],
   coupon: null,
+  isHydrated: false,
 } as const satisfies CartState;
 
 export function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
+    case 'HYDRATE': {
+      return {
+        items: action.payload.items,
+        coupon: action.payload.coupon,
+        isHydrated: true,
+      };
+    }
+
     case 'ADD_ITEM': {
       const existingIndex = state.items.findIndex(
         (item) => item.product_id === action.payload.product_id,
@@ -79,6 +88,7 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
       return {
         items: [],
         coupon: null,
+        isHydrated: state.isHydrated,
       };
     }
   }

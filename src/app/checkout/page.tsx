@@ -29,7 +29,8 @@ export default function CheckoutPage(): React.JSX.Element {
   usePageTracking('Checkout');
 
   const router = useRouter();
-  const { items, subtotal, discount, coupon, clearCart } = useCart();
+  const { items, subtotal, discount, coupon, clearCart, isHydrated } =
+    useCart();
   const analytics = useRudderAnalytics();
 
   // Stable IDs for the checkout session — initialized once via useState lazy init
@@ -42,12 +43,12 @@ export default function CheckoutPage(): React.JSX.Element {
   const [shippingData, setShippingData] = useState<ShippingData | null>(null);
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
 
-  // Redirect to cart if empty (but not during order placement)
+  // Redirect to cart if empty (but not during order placement or before hydration)
   useEffect(() => {
-    if (items.length === 0 && !isPlacingOrder.current) {
+    if (isHydrated && items.length === 0 && !isPlacingOrder.current) {
       router.replace('/cart');
     }
-  }, [items.length, router]);
+  }, [isHydrated, items.length, router]);
 
   // Fire checkout started
   useEffect(() => {
