@@ -10,6 +10,7 @@ import {
   usePageTracking,
   useRudderAnalytics,
 } from '@/lib/analytics';
+import { useAuth } from '@/lib/auth';
 import { generateId } from '@/lib/utils/id';
 import { formatPrice } from '@/lib/utils/format';
 import { CheckoutStepper } from '@/components/checkout/CheckoutStepper';
@@ -29,6 +30,7 @@ export default function CheckoutPage(): React.JSX.Element {
   usePageTracking('Checkout');
 
   const router = useRouter();
+  const { user } = useAuth();
   const { items, subtotal, discount, coupon, clearCart, isHydrated } =
     useCart();
   const analytics = useRudderAnalytics();
@@ -98,6 +100,7 @@ export default function CheckoutPage(): React.JSX.Element {
       currency: 'USD',
       coupon: coupon?.code,
       checkout_flow: 'standard',
+      email: user?.email,
       products: items.map((item) => ({
         ...toProductPayload(item),
         quantity: item.quantity,
