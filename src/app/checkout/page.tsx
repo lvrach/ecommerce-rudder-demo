@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 
 import { useCart } from '@/lib/cart';
 import {
+  identifyUser,
   toProductPayload,
   trackCheckoutStarted,
   usePageTracking,
   useRudderAnalytics,
 } from '@/lib/analytics';
+import { generateUserId } from '@/lib/auth';
 import { generateId } from '@/lib/utils/id';
 import { formatPrice } from '@/lib/utils/format';
 import { CheckoutStepper } from '@/components/checkout/CheckoutStepper';
@@ -72,6 +74,18 @@ export default function CheckoutPage(): React.JSX.Element {
 
   function handleShippingComplete(data: ShippingData): void {
     setShippingData(data);
+
+    // Identify the guest user with their shipping email so that
+    // context_traits_email is populated on the Order Completed event.
+    if (analytics) {
+      const userId = generateUserId(data.email);
+      identifyUser(analytics, userId, {
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      });
+    }
+
     setCurrentStep(2);
   }
 
