@@ -21,6 +21,7 @@ interface StoredOrderData {
   currency: string;
   coupon?: string;
   checkout_flow?: string;
+  email?: string;
   products: CartProductPayload[];
 }
 
@@ -69,6 +70,7 @@ function ConfirmationContent(): React.JSX.Element {
         products: storedOrder.products,
         coupon: storedOrder.coupon,
         checkout_flow: storedOrder.checkout_flow,
+        email: storedOrder.email,
       });
 
       try {
