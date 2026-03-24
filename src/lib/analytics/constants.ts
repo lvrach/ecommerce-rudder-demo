@@ -2,6 +2,8 @@ export const ECOMMERCE_EVENTS = {
   // Core
   PAGE: 'page',
   IDENTIFY: 'identify',
+  SIGNED_IN: 'Signed In',
+  SIGNED_OUT: 'Signed Out',
   // Ecommerce
   PRODUCTS_SEARCHED: 'Products Searched',
   PRODUCT_LIST_VIEWED: 'Product List Viewed',

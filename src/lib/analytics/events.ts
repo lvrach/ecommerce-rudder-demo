@@ -18,6 +18,8 @@ import type {
   ProductPayload,
   PromotionPayload,
   SearchPayload,
+  SignedInPayload,
+  SignedOutPayload,
 } from './types';
 
 /**
@@ -59,6 +61,22 @@ export function toProductPayload(product: {
  */
 function toApiObject(payload: object): ApiObject {
   return { ...payload } as unknown as ApiObject;
+}
+
+export function trackSignedIn(
+  analytics: RudderAnalytics,
+  payload: SignedInPayload,
+): void {
+  console.log('[Analytics]', ECOMMERCE_EVENTS.SIGNED_IN, payload);
+  analytics.track(ECOMMERCE_EVENTS.SIGNED_IN, toApiObject(payload));
+}
+
+export function trackSignedOut(
+  analytics: RudderAnalytics,
+  payload: SignedOutPayload,
+): void {
+  console.log('[Analytics]', ECOMMERCE_EVENTS.SIGNED_OUT, payload);
+  analytics.track(ECOMMERCE_EVENTS.SIGNED_OUT, toApiObject(payload));
 }
 
 export function trackProductsSearched(
