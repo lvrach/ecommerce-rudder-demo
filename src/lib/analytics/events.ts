@@ -124,6 +124,21 @@ export function trackProductAddedToWishlist(
   );
 }
 
+export function trackProductRemovedFromWishlist(
+  analytics: RudderAnalytics,
+  payload: ProductPayload,
+): void {
+  console.log(
+    '[Analytics]',
+    ECOMMERCE_EVENTS.PRODUCT_REMOVED_FROM_WISHLIST,
+    payload,
+  );
+  analytics.track(
+    ECOMMERCE_EVENTS.PRODUCT_REMOVED_FROM_WISHLIST,
+    toApiObject(payload),
+  );
+}
+
 export function trackCartViewed(
   analytics: RudderAnalytics,
   payload: CartViewedPayload,
