@@ -89,3 +89,15 @@ export interface IdentifyTraits {
   first_name: string;
   last_name: string;
 }
+
+export interface NewsletterSignupPayload {
+  email: string;
+  signup_location: 'footer' | 'popup' | 'checkout' | 'product_page' | 'account_settings';
+  signup_method?: 'form' | 'checkout_opt_in' | 'social';
+}
+
+export interface NewsletterUnsubscribePayload {
+  email: string;
+  unsubscribe_location: 'email_link' | 'account_settings' | 'preference_center';
+  unsubscribe_reason?: string;
+}
