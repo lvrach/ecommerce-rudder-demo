@@ -13,6 +13,7 @@ export interface ProductPayload {
 
 export interface CartProductPayload extends ProductPayload {
   quantity: number;
+  origin: string;
   checkout_flow?: string;
 }
 
