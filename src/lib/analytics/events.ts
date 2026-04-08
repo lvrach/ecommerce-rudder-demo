@@ -12,6 +12,8 @@ import type {
   CheckoutStepPayload,
   CouponPayload,
   IdentifyTraits,
+  NewsletterSignupPayload,
+  NewsletterUnsubscribePayload,
   OrderCompletedPayload,
   PaymentInfoPayload,
   ProductListPayload,
@@ -224,4 +226,20 @@ export function identifyUser(
 ): void {
   console.log('[Analytics]', ECOMMERCE_EVENTS.IDENTIFY, { userId, traits });
   analytics.identify(userId, { ...traits } as RudderIdentifyTraits);
+}
+
+export function trackNewsletterSignup(
+  analytics: RudderAnalytics,
+  payload: NewsletterSignupPayload,
+): void {
+  console.log('[Analytics]', ECOMMERCE_EVENTS.NEWSLETTER_SIGNUP, payload);
+  analytics.track(ECOMMERCE_EVENTS.NEWSLETTER_SIGNUP, toApiObject(payload));
+}
+
+export function trackNewsletterUnsubscribe(
+  analytics: RudderAnalytics,
+  payload: NewsletterUnsubscribePayload,
+): void {
+  console.log('[Analytics]', ECOMMERCE_EVENTS.NEWSLETTER_UNSUBSCRIBE, payload);
+  analytics.track(ECOMMERCE_EVENTS.NEWSLETTER_UNSUBSCRIBE, toApiObject(payload));
 }
