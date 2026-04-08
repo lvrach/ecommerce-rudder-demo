@@ -14,6 +14,7 @@ import type {
   IdentifyTraits,
   OrderCompletedPayload,
   PaymentInfoPayload,
+  ProductAddedPayload,
   ProductListPayload,
   ProductPayload,
   PromotionPayload,
@@ -95,7 +96,7 @@ export function trackProductViewed(
 
 export function trackProductAdded(
   analytics: RudderAnalytics,
-  payload: CartProductPayload,
+  payload: ProductAddedPayload,
 ): void {
   console.log('[Analytics]', ECOMMERCE_EVENTS.PRODUCT_ADDED, payload);
   analytics.track(ECOMMERCE_EVENTS.PRODUCT_ADDED, toApiObject(payload));
