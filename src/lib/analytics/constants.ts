@@ -20,4 +20,7 @@ export const ECOMMERCE_EVENTS = {
   ORDER_COMPLETED: 'Order Completed',
   PROMOTION_VIEWED: 'Promotion Viewed',
   PROMOTION_CLICKED: 'Promotion Clicked',
+  // Newsletter
+  NEWSLETTER_SIGNUP: 'newsletter_signup',
+  NEWSLETTER_UNSUBSCRIBE: 'newsletter_unsubscribe',
 } as const;

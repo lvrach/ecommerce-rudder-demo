@@ -99,3 +99,29 @@ export interface IdentifyTraits {
   first_name: string;
   last_name: string;
 }
+
+/**
+ * Payload for the "newsletter_signup" event.
+ * Fired when a user successfully submits a newsletter signup form.
+ */
+export interface NewsletterSignupPayload {
+  /** Email address being subscribed to the newsletter. */
+  email: string;
+  /** UI location where the signup form was submitted. */
+  signup_location: 'footer' | 'popup' | 'checkout' | 'product_page' | 'account_settings';
+  /** The mechanism through which the user signed up. Omit when using the standard form. */
+  signup_method?: 'form' | 'checkout_opt_in' | 'social';
+}
+
+/**
+ * Payload for the "newsletter_unsubscribe" event.
+ * Fired when a user successfully unsubscribes from the newsletter.
+ */
+export interface NewsletterUnsubscribePayload {
+  /** Email address being unsubscribed from the newsletter. */
+  email: string;
+  /** Where the unsubscribe action was triggered. */
+  unsubscribe_location: 'email_link' | 'account_settings' | 'preference_center';
+  /** Optional reason provided by the user for unsubscribing. Omit when no reason was selected. */
+  unsubscribe_reason?: string;
+}
