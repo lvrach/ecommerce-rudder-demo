@@ -20,10 +20,10 @@ export interface CartProductPayload extends ProductPayload {
  * Payload for the "Product Added" event.
  * Extends CartProductPayload with tea_type, which is required for
  * cart analysis segmented by tea variety.
- * Allowed values: 'green' | 'black' | 'herbal' | 'oolong'
+ * Allowed values match the product category enum in data/schema.ts.
  */
 export interface ProductAddedPayload extends CartProductPayload {
-  tea_type: 'green' | 'black' | 'herbal' | 'oolong';
+  tea_type: 'green' | 'black' | 'herbal' | 'oolong' | 'white' | 'pu-erh';
 }
 
 export interface ProductListPayload {

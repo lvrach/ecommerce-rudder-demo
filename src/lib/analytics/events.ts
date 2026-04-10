@@ -218,6 +218,26 @@ export function trackPromotionClicked(
   analytics.track(ECOMMERCE_EVENTS.PROMOTION_CLICKED, toApiObject(payload));
 }
 
+/**
+ * Merge the current anonymous session into the newly identified user.
+ *
+ * Must be called BEFORE identifyUser() on sign-in so that all pre-login
+ * events (e.g. cart_viewed) are stitched to the known userId in the
+ * warehouse. The SDK automatically uses the current anonymousId as the
+ * "from" identity when no second argument is supplied.
+ *
+ * Sequence on sign-in:
+ *   1. aliasUser(analytics, userId)   — link anonymous → known
+ *   2. identifyUser(analytics, userId, traits) — attach traits to userId
+ */
+export function aliasUser(
+  analytics: RudderAnalytics,
+  userId: string,
+): void {
+  console.log('[Analytics] alias', { to: userId });
+  analytics.alias(userId);
+}
+
 export function identifyUser(
   analytics: RudderAnalytics,
   userId: string,

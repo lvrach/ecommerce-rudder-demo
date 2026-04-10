@@ -34,6 +34,7 @@ export function BuyNowButton({
       trackProductAdded(analytics, {
         ...toProductPayload(product),
         quantity,
+        tea_type: product.category,
         checkout_flow: 'instant',
       });
     }

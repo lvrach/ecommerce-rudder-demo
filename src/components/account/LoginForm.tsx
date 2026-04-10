@@ -4,7 +4,7 @@ import { type FormEvent, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
 import { selectRandomDemoPersona } from '@/data/demo-personas';
-import { identifyUser, useRudderAnalytics } from '@/lib/analytics';
+import { aliasUser, identifyUser, useRudderAnalytics } from '@/lib/analytics';
 import { type UserProfile, generateUserId, useAuth } from '@/lib/auth/context';
 
 function UserIcon(): React.JSX.Element {
@@ -110,6 +110,12 @@ export function LoginForm(): React.JSX.Element {
     const userId = generateUserId(email);
 
     if (analytics) {
+      // Step 1: alias — stitches the anonymous session to the known userId.
+      // Must come before identify() so pre-login events (e.g. cart_viewed)
+      // are linked to this user in warehouse funnels.
+      aliasUser(analytics, userId);
+
+      // Step 2: identify — attaches traits to the now-resolved userId.
       identifyUser(analytics, userId, {
         email,
         name: `${firstName} ${lastName}`,
