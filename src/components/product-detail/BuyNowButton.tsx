@@ -1,15 +1,17 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/shared/Button';
 import type { TeaProduct } from '@/data/schema';
+import { useAuth } from '@/lib/auth';
+import { useCart } from '@/lib/cart';
 import {
   toProductPayload,
   trackProductAdded,
   useRudderAnalytics,
 } from '@/lib/analytics';
-import { useCart } from '@/lib/cart';
 
 const ALLOWED_TEA_TYPES = ['green', 'black', 'herbal', 'oolong'] as const;
 type TeaType = typeof ALLOWED_TEA_TYPES[number];
@@ -20,45 +22,46 @@ function toTeaType(category: string): TeaType {
     : 'green';
 }
 
-interface AddToCartButtonProps {
+interface BuyNowButtonProps {
   product: TeaProduct;
   quantity: number;
 }
 
-export function AddToCartButton({
+export function BuyNowButton({
   product,
   quantity,
-}: AddToCartButtonProps): React.JSX.Element {
-  const analytics = useRudderAnalytics();
+}: BuyNowButtonProps): React.JSX.Element | null {
   const { addItem } = useCart();
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const { isLoggedIn } = useAuth();
+  const router = useRouter();
+  const analytics = useRudderAnalytics();
 
-  const handleAddToCart = useCallback((): void => {
+  const handleBuyNow = useCallback((): void => {
     addItem(product, quantity);
 
     if (analytics) {
       trackProductAdded(analytics, {
         ...toProductPayload(product),
         quantity,
+        checkout_flow: 'instant',
         tea_type: toTeaType(product.category),
       });
     }
 
-    setShowConfirmation(true);
-    setTimeout(() => {
-      setShowConfirmation(false);
-    }, 2000);
-  }, [analytics, product, quantity, addItem]);
+    router.push('/checkout/instant');
+  }, [addItem, product, quantity, router, analytics]);
+
+  if (!isLoggedIn) return null;
 
   return (
     <Button
-      variant="primary"
+      variant="secondary"
       size="lg"
       disabled={!product.in_stock}
-      onClick={handleAddToCart}
+      onClick={handleBuyNow}
       className="flex-1"
     >
-      {showConfirmation ? 'Added!' : 'Add to Cart'}
+      Buy Now
     </Button>
   );
 }
