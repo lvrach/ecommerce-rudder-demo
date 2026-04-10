@@ -31,6 +31,7 @@ export function AddToCartButton({
       trackProductAdded(analytics, {
         ...toProductPayload(product),
         quantity,
+        tea_type: product.category,
       });
     }
 
