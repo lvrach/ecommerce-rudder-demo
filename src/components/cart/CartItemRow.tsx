@@ -46,6 +46,7 @@ export function CartItemRow({ item }: CartItemRowProps): React.JSX.Element {
       trackProductRemoved(analytics, {
         ...toProductPayload(item),
         quantity: item.quantity,
+        tea_type: item.category as 'green' | 'black' | 'herbal' | 'oolong',
       });
     }
   }

@@ -26,6 +26,16 @@ export interface ProductAddedPayload extends CartProductPayload {
   tea_type: 'green' | 'black' | 'herbal' | 'oolong';
 }
 
+/**
+ * Payload for the "Product Removed" event.
+ * Extends CartProductPayload with tea_type, matching ProductAddedPayload
+ * so cart removal can be analysed by tea variety.
+ * Allowed values: 'green' | 'black' | 'herbal' | 'oolong'
+ */
+export interface ProductRemovedPayload extends CartProductPayload {
+  tea_type: 'green' | 'black' | 'herbal' | 'oolong';
+}
+
 export interface ProductListPayload {
   list_id: string;
   category: string;

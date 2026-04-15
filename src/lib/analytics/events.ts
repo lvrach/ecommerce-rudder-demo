@@ -17,6 +17,7 @@ import type {
   ProductAddedPayload,
   ProductListPayload,
   ProductPayload,
+  ProductRemovedPayload,
   PromotionPayload,
   SearchPayload,
 } from './types';
@@ -104,7 +105,7 @@ export function trackProductAdded(
 
 export function trackProductRemoved(
   analytics: RudderAnalytics,
-  payload: CartProductPayload,
+  payload: ProductRemovedPayload,
 ): void {
   console.log('[Analytics]', ECOMMERCE_EVENTS.PRODUCT_REMOVED, payload);
   analytics.track(ECOMMERCE_EVENTS.PRODUCT_REMOVED, toApiObject(payload));
