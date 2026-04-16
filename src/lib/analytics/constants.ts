@@ -13,6 +13,7 @@ export const ECOMMERCE_EVENTS = {
   CART_VIEWED: 'Cart Viewed',
   COUPON_APPLIED: 'Coupon Applied',
   COUPON_DENIED: 'Coupon Denied',
+  COUPON_REMOVED: 'Coupon Removed',
   CHECKOUT_STARTED: 'Checkout Started',
   CHECKOUT_STEP_VIEWED: 'Checkout Step Viewed',
   CHECKOUT_STEP_COMPLETED: 'Checkout Step Completed',

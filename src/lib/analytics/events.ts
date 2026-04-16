@@ -149,6 +149,14 @@ export function trackCouponDenied(
   analytics.track(ECOMMERCE_EVENTS.COUPON_DENIED, toApiObject(payload));
 }
 
+export function trackCouponRemoved(
+  analytics: RudderAnalytics,
+  payload: CouponPayload,
+): void {
+  console.log('[Analytics]', ECOMMERCE_EVENTS.COUPON_REMOVED, payload);
+  analytics.track(ECOMMERCE_EVENTS.COUPON_REMOVED, toApiObject(payload));
+}
+
 export function trackCheckoutStarted(
   analytics: RudderAnalytics,
   payload: CheckoutStartedPayload,
