@@ -7,6 +7,7 @@ import { useCart } from '@/lib/cart';
 import {
   trackCouponApplied,
   trackCouponDenied,
+  trackCouponRemoved,
   useRudderAnalytics,
 } from '@/lib/analytics';
 import { Button } from '@/components/shared/Button';
@@ -104,6 +105,13 @@ export function CouponInput(): React.JSX.Element {
   }
 
   function handleRemoveCoupon(): void {
+    if (analytics && coupon) {
+      trackCouponRemoved(analytics, {
+        coupon_id: coupon.code,
+        coupon_name: coupon.description,
+        discount: coupon.discount_percentage,
+      });
+    }
     removeCoupon();
     setError('');
   }
