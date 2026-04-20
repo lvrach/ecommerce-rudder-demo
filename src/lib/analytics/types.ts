@@ -99,3 +99,12 @@ export interface IdentifyTraits {
   first_name: string;
   last_name: string;
 }
+
+export interface SignedInPayload {
+  email: string;
+  method: string;
+}
+
+export interface SignedOutPayload {
+  email: string;
+}

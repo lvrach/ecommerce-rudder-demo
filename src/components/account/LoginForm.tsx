@@ -4,7 +4,12 @@ import { type FormEvent, useState } from 'react';
 
 import { Button } from '@/components/shared/Button';
 import { selectRandomDemoPersona } from '@/data/demo-personas';
-import { identifyUser, useRudderAnalytics } from '@/lib/analytics';
+import {
+  identifyUser,
+  trackSignedIn,
+  trackSignedOut,
+  useRudderAnalytics,
+} from '@/lib/analytics';
 import { type UserProfile, generateUserId, useAuth } from '@/lib/auth/context';
 
 function UserIcon(): React.JSX.Element {
@@ -116,6 +121,7 @@ export function LoginForm(): React.JSX.Element {
         first_name: firstName,
         last_name: lastName,
       });
+      trackSignedIn(analytics, { email, method: 'email_form' });
     }
 
     auth.login({ email, firstName, lastName, userId });
@@ -123,6 +129,12 @@ export function LoginForm(): React.JSX.Element {
   }
 
   function handleSignOut(): void {
+    const userEmail = auth.user?.email ?? '';
+
+    if (analytics && userEmail) {
+      trackSignedOut(analytics, { email: userEmail });
+    }
+
     auth.logout();
     setShowSuccess(false);
     setEmail('');
