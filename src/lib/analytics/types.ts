@@ -70,7 +70,7 @@ export interface OrderCompletedPayload {
   tax: number;
   currency: string;
   products: CartProductPayload[];
-  coupon?: string;
+  coupon_code?: string;
   checkout_flow?: string;
   email?: string;
 }

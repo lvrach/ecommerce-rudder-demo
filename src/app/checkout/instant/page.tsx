@@ -82,7 +82,7 @@ export default function InstantCheckoutPage(): React.JSX.Element {
       shipping,
       tax,
       currency: 'USD',
-      coupon: coupon?.code,
+      coupon_code: coupon?.code,
       checkout_flow: 'instant',
       email: user?.email,
       products: items.map((item) => ({

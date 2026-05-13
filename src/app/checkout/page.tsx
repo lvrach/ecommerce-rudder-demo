@@ -98,7 +98,7 @@ export default function CheckoutPage(): React.JSX.Element {
       shipping,
       tax,
       currency: 'USD',
-      coupon: coupon?.code,
+      coupon_code: coupon?.code,
       checkout_flow: 'standard',
       email: user?.email,
       products: items.map((item) => ({
