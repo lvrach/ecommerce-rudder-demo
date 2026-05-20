@@ -20,4 +20,5 @@ export const ECOMMERCE_EVENTS = {
   ORDER_COMPLETED: 'Order Completed',
   PROMOTION_VIEWED: 'Promotion Viewed',
   PROMOTION_CLICKED: 'Promotion Clicked',
+  CART_QUANTITY_UPDATED: 'Cart Quantity Updated',
 } as const;
