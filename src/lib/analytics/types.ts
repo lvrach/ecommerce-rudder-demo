@@ -93,6 +93,12 @@ export interface SearchPayload {
   query: string;
 }
 
+export interface CartQuantityUpdatedPayload extends ProductPayload {
+  quantity_before: number;
+  quantity_after: number;
+  quantity_delta: number;
+}
+
 export interface IdentifyTraits {
   email: string;
   name: string;
