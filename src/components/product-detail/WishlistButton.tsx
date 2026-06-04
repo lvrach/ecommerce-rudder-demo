@@ -6,6 +6,7 @@ import type { TeaProduct } from '@/data/schema';
 import {
   toProductPayload,
   trackProductAddedToWishlist,
+  trackProductRemovedFromWishlist,
   useRudderAnalytics,
 } from '@/lib/analytics';
 
@@ -23,8 +24,12 @@ export function WishlistButton({
     const newState = !wishlisted;
     setWishlisted(newState);
 
-    if (newState && analytics) {
-      trackProductAddedToWishlist(analytics, toProductPayload(product));
+    if (analytics) {
+      if (newState) {
+        trackProductAddedToWishlist(analytics, toProductPayload(product));
+      } else {
+        trackProductRemovedFromWishlist(analytics, toProductPayload(product));
+      }
     }
   }, [wishlisted, analytics, product]);
 

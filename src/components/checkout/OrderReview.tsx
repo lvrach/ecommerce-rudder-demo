@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useCart } from '@/lib/cart';
 import { formatPrice } from '@/lib/utils/format';
 import { PriceDisplay } from '@/components/shared/PriceDisplay';
 import { Button } from '@/components/shared/Button';
 import {
+  trackCheckoutStepCompleted,
   trackCheckoutStepViewed,
   useRudderAnalytics,
 } from '@/lib/analytics';
@@ -43,6 +44,17 @@ export function OrderReview({
       });
     }
   }, [analytics, checkoutId]);
+
+  const handlePlaceOrder = useCallback((): void => {
+    if (analytics) {
+      trackCheckoutStepCompleted(analytics, {
+        checkout_id: checkoutId,
+        step: 3,
+        step_name: 'Review',
+      });
+    }
+    onPlaceOrder();
+  }, [analytics, checkoutId, onPlaceOrder]);
 
   const shipping = subtotal > SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
   const taxableAmount = subtotal - discount;
@@ -172,7 +184,7 @@ export function OrderReview({
           type="button"
           variant="primary"
           size="lg"
-          onClick={onPlaceOrder}
+          onClick={handlePlaceOrder}
           className="w-full sm:w-auto"
         >
           Place Order
